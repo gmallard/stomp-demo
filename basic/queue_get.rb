@@ -16,17 +16,15 @@ class MessageGetter
   # Get messages from a queue.
   #
   def get_messages
+    received = nil
     @client.subscribe("/queue/test", {
                     "persistent" => true,
                     "client-id" => "rubyClient",
             } ) do |message|
       puts "Got Reply: ID=#{message.headers['message-id']} BODY=#{message.body} on #{message.headers['destination']}"
+      received = message
     end
-    #
-    # This read from STDIN seems to be required in order for this to work.
-    # Why ??
-    #
-    gets
+    sleep 0.1 until received
     @client.close
     puts "getter client ending"
   end
