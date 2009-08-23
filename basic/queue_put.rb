@@ -1,18 +1,37 @@
 require 'rubygems'
 require 'stomp'
-client = Stomp::Client.open "login", "passcode", "localhost", 51613
-
-# sending 5 messages at once
-for i in 1..5 do
-   m = "Go Sox #{i}!"
-   puts m
-   client.send("/queue/test", m, {
-    "persistent" => true,
-    "client-id" => "Client1",
-    "reply-to" => "/queue/test",
-    }
-  )
+#
+# = Message Putter
+#
+# Show a very basic stompserver client which puts messages to a queue.
+#
+class MessagePutter
+  #
+  # Create a new message putter.
+  #
+  def initialize
+    @client = Stomp::Client.open "login", "passcode", "localhost", 51613
+  end
+  #
+  # Put messages to a queue.
+  #
+  def put_messages
+    for i in 1..5 do
+       message = "Go Sox #{i}!"
+       puts message
+       @client.send("/queue/test", message, {
+        "persistent" => true,
+        "client-id" => "Client1",
+        "reply-to" => "/queue/test",
+        }
+      )
+    end
+    puts "putter client ending"
+    @client.close
+  end
 end
+#
+putter = MessagePutter.new
+putter.put_messages
 
-client.close
 

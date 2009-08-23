@@ -9,4 +9,11 @@
 # running instance of ActiveMQ which uses 61613.  The non-default port is
 # 51613.
 #
+# == Stompserver Start Options
+#
+# === Command Line Options
+#
+#
+# === Configuration File Options
+#
 
