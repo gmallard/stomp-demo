@@ -9,9 +9,9 @@ class MessagePutter
   #
   # Create a new message putter.
   #
-  def initialize
+  def initialize(do_eow)
     @client = Stomp::Client.open "login", "passcode", "localhost", 51613
-    @do_eow = true
+    @do_eow = do_eow
   end
   #
   # Put messages to a queue.
@@ -43,7 +43,9 @@ class MessagePutter
   end
 end
 #
-putter = MessagePutter.new
+do_eow = false
+do_eow = true if ARGV[0] =~ /true/i
+putter = MessagePutter.new(do_eow)
 putter.put_messages
 
 
