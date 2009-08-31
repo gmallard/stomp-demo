@@ -43,7 +43,6 @@ class MessageGetter
   end
 end
 #
-# getter = MessageGetter.new(:queue_name => "/queue/testbasic")
 getter = MessageGetter.new(:queue_name => "/queue/testbasic")
 getter.get_messages
 
