@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'stomp'
+require 'logger'
 #
 # = Message Getter
 #
@@ -11,6 +12,8 @@ class MessageGetter
   #
   def initialize
     @client = Stomp::Client.open "login", "passcode", "localhost", 51613
+    @@log = Logger.new(STDOUT)
+    @@log.level = Logger::DEBUG
   end
   #
   # Get messages from a queue.
@@ -21,12 +24,12 @@ class MessageGetter
                     "persistent" => true,
                     "client-id" => "rubyClient",
             } ) do |message|
-      puts "Got Reply: ID=#{message.headers['message-id']} BODY=#{message.body} on #{message.headers['destination']}"
+      @@log.debug "Got Reply: ID=#{message.headers['message-id']} BODY=#{message.body} on #{message.headers['destination']}"
       received = message
     end
     sleep 0.1 until received
     @client.close
-    puts "getter client ending"
+    @@log.debug "getter client ending"
   end
 end
 #

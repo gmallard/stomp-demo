@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'stomp'
+require 'logger'
 #
 # = Message Putter
 #
@@ -11,6 +12,8 @@ class MessagePutter
   #
   def initialize
     @client = Stomp::Client.open "login", "passcode", "localhost", 51613
+    @@log = Logger.new(STDOUT)
+    @@log.level = Logger::DEBUG
   end
   #
   # Put messages to a queue.
@@ -18,7 +21,7 @@ class MessagePutter
   def put_messages
     for i in 1..5 do
        message = "Go Sox #{i}!"
-       puts message
+       @@log.debug "#{message}"
        @client.send("/queue/test", message, {
         "persistent" => true,
         "client-id" => "Client1",
@@ -26,7 +29,7 @@ class MessagePutter
         }
       )
     end
-    puts "putter client ending"
+    @@log.debug "putter client ending"
     @client.close
   end
 end

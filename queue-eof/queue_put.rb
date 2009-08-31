@@ -1,9 +1,10 @@
 require 'rubygems'
 require 'stomp'
+require 'logger'
 #
 # = Message Putter
 #
-# Show a very basic stompserver client which puts messages to a queue.
+# Show a very basic stompserver client which @@log.debug messages to a queue.
 #
 class MessagePutter
   #
@@ -12,6 +13,8 @@ class MessagePutter
   def initialize(do_eow)
     @client = Stomp::Client.open "login", "passcode", "localhost", 51613
     @do_eow = do_eow
+    @@log = Logger.new(STDOUT)
+    @@log.level = Logger::DEBUG
   end
   #
   # Put messages to a queue.
@@ -19,7 +22,7 @@ class MessagePutter
   def put_messages
     for i in 1..5 do
        message = "Da Bears #{i}!"
-       puts message
+       @@log.debug message
        @client.send("/queue/contrun", message, {
         "persistent" => true,
         "client-id" => "Client1",
@@ -30,7 +33,7 @@ class MessagePutter
     # EOF message
     if @do_eow
       eowmsg = "__END_OF_WORK__"
-      puts "putting end work message: #{eowmsg}"
+      @@log.debug "putting end work message: #{eowmsg}"
       @client.send("/queue/contrun", eowmsg, {
         "persistent" => true,
         "client-id" => "Client1",
@@ -38,7 +41,7 @@ class MessagePutter
         }
       )
     end
-    puts "putter client ending"
+    @@log.debug "putter client ending"
     @client.close
   end
 end
