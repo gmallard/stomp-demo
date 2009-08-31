@@ -2,9 +2,9 @@ require 'rubygems'
 require 'stomp'
 require 'logger'
 #
-# = Message Putter
+# = Basic Message Putter
 #
-# Show a very basic stompserver client which puts messages to a queue.
+# Show a very +basic+ stomp client which puts messages to a queue.
 #
 class BasicMessagePutter
   #

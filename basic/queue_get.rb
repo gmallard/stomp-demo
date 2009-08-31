@@ -2,9 +2,9 @@ require 'rubygems'
 require 'stomp'
 require 'logger'
 #
-# = Message Getter
+# = Basic Message Getter
 #
-# Show a very basic stompserver client which gets messages from a queue.
+# Show a very +basic+ stomp client which gets messages from a queue.
 #
 class BasicMessageGetter
   #

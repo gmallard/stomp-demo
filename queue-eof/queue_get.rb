@@ -2,9 +2,12 @@ require 'rubygems'
 require 'stomp'
 require 'logger'
 #
-# = Message Getter
+# = Queue EOF Message Getter
 #
-# Show a very basic stompserver client which gets messages from a queue.
+# Show a +specialized+ stomp client which gets messages from a queue.
+#
+# This client loops forever until a special EOF message is detected on
+# the queue.
 #
 class QEofMessageGetter
   #

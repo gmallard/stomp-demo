@@ -2,9 +2,12 @@ require 'rubygems'
 require 'stomp'
 require 'logger'
 #
-# = Message Putter
+# = Queue EOF Message Putter
 #
-# Show a very basic stompserver client which puts messages to a queue.
+# Show a +specialized+ stomp client which puts messages to a queue.
+#
+# This client has the ability to put a special EOF message on the queue
+# at the end of processing.
 #
 class QEofMessagePutter
   #
