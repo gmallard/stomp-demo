@@ -10,7 +10,14 @@ class MessageGetter
   #
   # Create new message getter.
   #
-  def initialize
+  def initialize(params)
+    #
+    @queue_name = "/queue/test"
+    @queue_name = params[:queue_name] if params[:queue_name]
+    #
+    @client_id = "Client1"
+    @client_id = params[:client_id] if params[:client_id]
+    #
     @client = Stomp::Client.open "login", "passcode", "localhost", 51613
     @@log = Logger.new(STDOUT)
     @@log.level = Logger::DEBUG
@@ -20,11 +27,15 @@ class MessageGetter
   #
   def get_messages
     received = nil
-    @client.subscribe("/queue/test", {
+    @@log.debug "getter client starting"
+    @client.subscribe(@queue_name, {
                     "persistent" => true,
-                    "client-id" => "rubyClient",
+                    "client-id" => @client_id,
             } ) do |message|
-      @@log.debug "Got Reply: ID=#{message.headers['message-id']} BODY=#{message.body} on #{message.headers['destination']}"
+      lmsg = "Got Reply: ID=#{message.headers['message-id']} "
+      lmsg += "BODY=#{message.body} "
+      lmsg += "on QUEUE #{message.headers['destination']}"
+      @@log.debug "#{lmsg}"
       received = message
     end
     sleep 0.1 until received
@@ -33,6 +44,6 @@ class MessageGetter
   end
 end
 #
-getter = MessageGetter.new
+getter = MessageGetter.new(:queue_name => "/queue/testbasic")
 getter.get_messages
 
