@@ -1,6 +1,8 @@
 require 'rubygems'
 require 'stomp'
 require 'logger'
+$:.unshift File.join(File.dirname(__FILE__), "..", "lib")
+require 'runparms'
 #
 # = Basic Message Putter
 #
@@ -8,9 +10,13 @@ require 'logger'
 #
 class BasicMessagePutter
   #
+  attr_reader :queue_name, :client_id, :max_msgs
+  #
   # Create a new message putter.
   #
-  def initialize(params)
+  def initialize(params={})
+    @@log = Logger.new(STDOUT)
+    @@log.level = Logger::DEBUG
     #
     # set defaults or overrides
     #
@@ -18,10 +24,11 @@ class BasicMessagePutter
     @queue_name = params[:queue_name] ? params[:queue_name] : "/queue/test"
     @client_id = params[:client_id] ? params[:client_id] : "Client1"
     #
-    @client = Stomp::Client.open "login", "passcode", "localhost", 51613
+    runparms = Runparms.new(params)
+    @@log.debug runparms.to_s
+    @client = Stomp::Client.open(runparms.userid, runparms.password, 
+      runparms.host, runparms.port)
     #
-    @@log = Logger.new(STDOUT)
-    @@log.level = Logger::DEBUG
   end
   #
   # Put messages to a queue.
@@ -42,7 +49,8 @@ class BasicMessagePutter
   end
 end
 #
-putter = BasicMessagePutter.new(:max_msgs => 10, :queue_name => "/queue/testbasic")
+putter = BasicMessagePutter.new(:max_msgs => 10, 
+  :queue_name => "/queue/testbasic")
 putter.put_messages
 
 

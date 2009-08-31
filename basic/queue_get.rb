@@ -1,6 +1,8 @@
 require 'rubygems'
 require 'stomp'
 require 'logger'
+$:.unshift File.join(File.dirname(__FILE__), "..", "lib")
+require 'runparms'
 #
 # = Basic Message Getter
 #
@@ -8,25 +10,30 @@ require 'logger'
 #
 class BasicMessageGetter
   #
+  attr_reader :queue_name, :client_id
+  #
   # Create new message getter.
   #
-  def initialize(params)
+  def initialize(params={})
+    @@log = Logger.new(STDOUT)
+    @@log.level = Logger::DEBUG
     #
     # set defaults or overrides
     #
     @queue_name = params[:queue_name] ? params[:queue_name] : "/queue/testbasic"
     @client_id = params[:client_id] ? params[:client_id] : "Client1"
+    runparms = Runparms.new(params)
+    @@log.debug runparms.to_s
     #
-    @client = Stomp::Client.open "login", "passcode", "localhost", 51613
-    @@log = Logger.new(STDOUT)
-    @@log.level = Logger::DEBUG
+    @client = Stomp::Client.open(runparms.userid, runparms.password, 
+      runparms.host, runparms.port)
   end
   #
   # Get messages from a queue.
   #
   def get_messages
-    received = nil
     @@log.debug "getter client starting"
+    received = nil
     @client.subscribe(@queue_name, {
                     "persistent" => true,
                     "client-id" => @client_id,

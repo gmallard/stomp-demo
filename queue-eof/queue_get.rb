@@ -1,6 +1,8 @@
 require 'rubygems'
 require 'stomp'
 require 'logger'
+$:.unshift File.join(File.dirname(__FILE__), "..", "lib")
+require 'runparms'
 #
 # = Queue EOF Message Getter
 #
@@ -13,9 +15,14 @@ class QEofMessageGetter
   #
   # Create new message getter.
   #
-  def initialize
+  def initialize(params={})
     @@log = Logger.new(STDOUT)
     @@log.level = Logger::DEBUG
+    @runparms = Runparms.new
+    @@log.debug @runparms.to_s
+    #
+    @queue_name = params[:queue_name] ? params[:queue_name] : "/queue/contrun"
+    @client_id = params[:client_id] ? params[:client_id] : "rubyClient"
   end
   #
   # Get messages from a queue.
@@ -29,18 +36,23 @@ class QEofMessageGetter
     while (keep_running)
       loop_count += 1
       @@log.debug "Client loop count: #{loop_count}"
-      received = nil
-      @client = Stomp::Client.open "login", "passcode", "localhost", 51613
+      #
+      client = Stomp::Client.open(@runparms.userid, @runparms.password, 
+        @runparms.host, @runparms.port)
       @@log.debug "next subscribe starts"
-      @client.subscribe("/queue/contrun", {
+      received = nil
+      client.subscribe(@queue_name, {
                     "persistent" => true,
-                    "client-id" => "rubyClient",
+                    "client-id" => @client_id,
             } ) do |message|
-          @@log.debug "Got Reply: ID=#{message.headers['message-id']} BODY=#{message.body} on #{message.headers['destination']}"
+          lmsg = "Got Reply: ID=#{message.headers['message-id']} "
+          lmsg += "BODY=#{message.body} "
+          lmsg += "on QUEUE #{message.headers['destination']}"
+          @@log.debug "#{lmsg}"
           #
           proc_message(message)
           #
-          if message.body == "__END_OF_WORK__"
+          if message.body == Runparms::EOF_MSG
             @@log.debug "should be done"
             keep_running = false
             break
@@ -50,7 +62,7 @@ class QEofMessageGetter
       @@log.debug "Starting to sleep"
       sleep 0.1 until received
       @@log.debug "Ending sleep"
-      @client.close
+      client.close
       received = nil
       @@log.debug "getter client loop ending"
     end
