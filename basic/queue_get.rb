@@ -12,11 +12,10 @@ class MessageGetter
   #
   def initialize(params)
     #
-    @queue_name = "/queue/test"
-    @queue_name = params[:queue_name] if params[:queue_name]
+    # set defaults or overrides
     #
-    @client_id = "Client1"
-    @client_id = params[:client_id] if params[:client_id]
+    @queue_name = params[:queue_name] ? params[:queue_name] : "/queue/testbasic"
+    @client_id = params[:client_id] ? params[:client_id] : "Client1"
     #
     @client = Stomp::Client.open "login", "passcode", "localhost", 51613
     @@log = Logger.new(STDOUT)
@@ -44,6 +43,7 @@ class MessageGetter
   end
 end
 #
+# getter = MessageGetter.new(:queue_name => "/queue/testbasic")
 getter = MessageGetter.new(:queue_name => "/queue/testbasic")
 getter.get_messages
 

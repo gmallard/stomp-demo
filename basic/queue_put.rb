@@ -12,14 +12,11 @@ class MessagePutter
   #
   def initialize(params)
     #
-    @max_msgs = 5
-    @max_msgs = params[:max_msgs] if params[:max_msgs]
+    # set defaults or overrides
     #
-    @queue_name = "/queue/test"
-    @queue_name = params[:queue_name] if params[:queue_name]
-    #
-    @client_id = "Client1"
-    @client_id = params[:client_id] if params[:client_id]
+    @max_msgs = params[:max_msgs] ? params[:max_msgs] : 5
+    @queue_name = params[:queue_name] ? params[:queue_name] : "/queue/test"
+    @client_id = params[:client_id] ? params[:client_id] : "Client1"
     #
     @client = Stomp::Client.open "login", "passcode", "localhost", 51613
     #
