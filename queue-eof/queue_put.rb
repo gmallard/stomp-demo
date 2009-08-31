@@ -4,7 +4,7 @@ require 'logger'
 #
 # = Message Putter
 #
-# Show a very basic stompserver client which @@log.debug messages to a queue.
+# Show a very basic stompserver client which puts messages to a queue.
 #
 class MessagePutter
   #
