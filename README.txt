@@ -3,16 +3,23 @@
 #
 # == Notes
 #
-# Initial examples are based on the code suplied with the stompserver gem.
+# Initial examples are based on the code suplied with the stompserver gem,
+# and with tests from the stomp gem.
 #
-# Initial configuration uses a non-default port, because I already have a 
-# running instance of ActiveMQ which uses 61613.  The non-default port is
-# 51613.
+# The default configuration in this project uses a non-default port.  This is
+# because I already have a running instance of ActiveMQ.  My system is set up
+# as follows:
+#
+# stompserver:: port 51613
+# AMQ:: port => 61613
+#
+# == Software Versions
 #
 # This project is currently based on:
 #
 # stomp:: gem version 1.1
 # stompserver:: gem version 0.9.9
+# AMQ:: Version 5.2.0
 #
 # == Rdoc Generation
 #
@@ -40,7 +47,61 @@
 # === Configuration File Options
 #
 # Configuration options can also be stored in a configuration file.  This is
-# normally a YAML file named +stompserver.conf+ in the working directory. An
+# normally a YAML file named <b>stompserver.conf</b> in the working directory. An
 # example of such a configuration file is provided in this project.
 #
-
+#
+# == Testing
+#
+# The client code in this project has been tested against:
+#
+# stompserver:: Version as described above
+# AMQ:: Version as described above
+#
+# There are no formal unit tests for this project.  Feel free to clone and
+# add them if you care to.
+#
+# Before running any of the command line tests described below, you must
+# have a server (stompserver or AMQ) up and running.  Furthermore, any AMQ
+# server must be configured to accept the stomp message protocaols.
+#
+# == Client To Server Connection Parameters
+#
+# Client to server connection parameters can best be controlled by modifying
+# the <b>props.yaml</b> configuration file found in the project's root directory.
+#
+# == Basic Producer and Consumer Tests
+#
+# The basic producer (putter) and consumer (getter) clients are found in the
+# *basic* subdirectory of this project.  The object of these are to:
+#
+# * Start a basic message getter.
+# * Send messages to the basic message getter.
+#
+# To run these tests:
+#
+# * Terminal 1: ruby basic/queue_get.rb
+# * Terminal 2: ruby basic/queue_put.rb
+#
+# == Queued EOF Producer and Consumer Tests
+#
+# The queued EOF producer (putter) and consumer (getter) clients are found 
+# in the <b>queue-eof</b> subdirectory of this project.  The object of these 
+# are to:
+#
+# * Start a message getter which continuously waits for messages.
+# * Ends when special EOF messsage is encountered on the input queue.
+# * Send many messages to the message getter.
+# * Eventually send the special EOF message.
+#
+# To run these tests:
+#
+# * Terminal 1: ruby queue-eof/queue_get.rb
+# * Terminal 2: ruby queue-eof/queue_put.rb
+# * Repeat many times
+# * Terminal 2: ruby queue-eof/queue_put.rb TRUE
+#
+# == Threaded Producer and Consumer Test
+#
+# Documentation TBD.
+#
