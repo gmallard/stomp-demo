@@ -6,7 +6,7 @@ require 'logger'
 #
 # Show a very basic stompserver client which puts messages to a queue.
 #
-class MessagePutter
+class BasicMessagePutter
   #
   # Create a new message putter.
   #
@@ -42,7 +42,7 @@ class MessagePutter
   end
 end
 #
-putter = MessagePutter.new(:max_msgs => 10, :queue_name => "/queue/testbasic")
+putter = BasicMessagePutter.new(:max_msgs => 10, :queue_name => "/queue/testbasic")
 putter.put_messages
 
 

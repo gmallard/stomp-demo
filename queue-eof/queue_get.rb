@@ -6,7 +6,7 @@ require 'logger'
 #
 # Show a very basic stompserver client which gets messages from a queue.
 #
-class MessageGetter
+class QEofMessageGetter
   #
   # Create new message getter.
   #
@@ -60,6 +60,6 @@ class MessageGetter
   end
 end
 #
-getter = MessageGetter.new
+getter = QEofMessageGetter.new
 getter.get_messages
 

@@ -6,7 +6,7 @@ require 'logger'
 #
 # Show a very basic stompserver client which puts messages to a queue.
 #
-class MessagePutter
+class QEofMessagePutter
   #
   # Create a new message putter.
   #
@@ -48,7 +48,7 @@ end
 #
 do_eow = false
 do_eow = true if ARGV[0] =~ /true/i
-putter = MessagePutter.new(do_eow)
+putter = QEofMessagePutter.new(do_eow)
 putter.put_messages
 
 
