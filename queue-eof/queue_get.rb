@@ -25,15 +25,18 @@ class QEofMessageGetter
     @client_id = params[:client_id] ? params[:client_id] : "rubyClient"
   end
   #
-  # Get messages from a queue.
+  # Get messages from a queue.  Keep running until a apecially formatted
+  # message which signals "end of work" is received.
   #
   def get_messages
     @@log.debug "get messages starts"
     #
-    keep_running = true
+    eof_msg_not_received = true
     loop_count = 0
     #
-    while (keep_running)
+    # Do this until the EOF message is received.
+    #
+    while (eof_msg_not_received)
       loop_count += 1
       @@log.debug "Client loop count: #{loop_count}"
       #
@@ -53,7 +56,7 @@ class QEofMessageGetter
           #
           if message.body == Runparms::EOF_MSG
             @@log.debug "should be done"
-            keep_running = false
+            eof_msg_not_received = false
             break
           end
           received = message

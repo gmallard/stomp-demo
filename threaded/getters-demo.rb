@@ -1,3 +1,12 @@
+#
+# = ThreadedGetters
+#
+# Show an example with the following characteristics:
+#
+# * A putter knows how many getters (n) will be processing messages
+# * The putter evenly distributes messages across (n) queues 
+# * (n) getter threads are started, and process messages
+#
 require 'rubygems'
 require 'stomp'
 require 'logger'
@@ -7,6 +16,8 @@ require 'runparms'
 class ThreadedGetters
   #
   attr_reader :getters
+  #
+  # Initialize all run parameters.
   #
   def initialize(params = {})
     @@log = Logger.new(STDOUT)
@@ -25,6 +36,9 @@ class ThreadedGetters
     @@log.debug "Max Gettters: #{@max_getters + 1}"
     @@log.debug "Max WKEs: #{@max_wke + 1}"
   end
+  #
+  # Start (n) getter threads.  Each thread runs until it's individual
+  # input queue is empty.
   #
   def start_getters
     #
@@ -52,6 +66,10 @@ class ThreadedGetters
     end
   end
   #
+  # Run the main putter.
+  #
+  # * Distribute messages across (n) queues.
+  #
   def run_putter
     client = Stomp::Client.open(@runparms.userid, @runparms.password, 
       @runparms.host, @runparms.port)
@@ -75,10 +93,14 @@ class ThreadedGetters
     client.close
   end
   #
+  # Real work should occur here.
+  #
   private
   def proc_message(m)
     @@log.debug "Processing: #{m.body}"
   end
+  #
+  # Convenience method for obtaining a queue name.
   #
   def queue_name(nxtn)
     "#{@queue_name_base}#{nxtn}"

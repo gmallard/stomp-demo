@@ -18,7 +18,11 @@ class QEofMessagePutter
   def initialize(params={})
     @@log = Logger.new(STDOUT)
     @@log.level = Logger::DEBUG
-    @client = Stomp::Client.open "login", "passcode", "localhost", 51613
+    #
+    @runparms = Runparms.new
+    # Just one client here
+    @client = Stomp::Client.open(@runparms.userid, @runparms.password, 
+      @runparms.host, @runparms.port)
     #
     @do_eow = params[:do_eow] ? params[:do_eow] : false
     @queue_name = params[:queue_name] ? params[:queue_name] : "/queue/contrun"
@@ -53,7 +57,7 @@ end
 #
 eow = false
 eow = true if ARGV[0] =~ /true/i
-putter = QEofMessagePutter.new(:do_eow => eow)
+putter = QEofMessagePutter.new(:do_eow => eow, :max_msgs => 3)
 putter.put_messages
 
 
