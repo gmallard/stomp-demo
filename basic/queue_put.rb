@@ -37,12 +37,9 @@ class BasicMessagePutter
     for i in 1..@max_msgs do
        message = "Go Sox #{i}!"
        @@log.debug "#{message}"
-       @client.send(@queue_name, message, {
-        "persistent" => true,
-        "client-id" => @client_id,
-        "reply-to" => @queue_name,
-        }
-      )
+       @client.send(@queue_name, message, 
+        {"persistent" => true, "client-id" => @client_id, 
+         "reply-to" => @queue_name} )
     end
     @@log.debug "putter client ending"
     @client.close

@@ -32,12 +32,9 @@ class QEofMessagePutter
     for i in 1..@max_msgs do
        message = "Da Bears #{i}!"
        @@log.debug message
-       @client.send(@queue_name, message, {
-        "persistent" => true,
-        "client-id" => @client_id,
-        "reply-to" => @queue_name,
-        }
-      )
+       @client.send(@queue_name, message,
+         {"persistent" => true, "client-id" => @client_id,
+          "reply-to" => @queue_name} )
     end
     # EOF message
     if @do_eow

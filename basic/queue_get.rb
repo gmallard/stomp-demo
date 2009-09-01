@@ -38,10 +38,8 @@ class BasicMessageGetter
     # Note: in the subscribe loop there is actually a separate
     # thread!!
     #
-    @client.subscribe(@queue_name, {
-                    "persistent" => true,
-                    "client-id" => @client_id,
-            } ) do |message|
+    @client.subscribe(@queue_name,
+     {"persistent" => true, "client-id" => @client_id} ) do |message|
       @@log.debug "subscribe loop, thread is: #{Thread.current}"
       lmsg = "Got Reply: ID=#{message.headers['message-id']} "
       lmsg += "BODY=#{message.body} "
