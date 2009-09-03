@@ -1,5 +1,5 @@
 #
-# = Stomp Server and Messaging Client Examples
+# = Stomp Messaging Client Examples
 #
 # == Notes
 #
@@ -7,9 +7,9 @@
 # Initial examples are based on the code suplied with the stompserver gem,
 # and with tests from the stomp gem.
 #
-# The default configuration in this project uses a non-default port.  This is
-# because I already have a running instance of ActiveMQ.  My system is set up
-# as follows:
+# The default configuration in this project uses a non-default port for the
+# stompserver RUby gem.  This is because I already have a running instance 
+# of ActiveMQ.  My system is set up as follows:
 #
 # stompserver:: port 51613
 # AMQ:: port => 61613
@@ -83,7 +83,7 @@
 # === Basic Producer and Consumer Tests
 #
 # The basic producer (putter) and consumer (getter) clients are found in the
-# *basic* subdirectory of this project.  The objective of these tests is to:
+# <b>basic</b> subdirectory of this project.  The objective of these tests is to:
 #
 # * Start a basic message getter.
 # * Send messages to the basic message getter.
@@ -99,7 +99,7 @@
 #
 # The queued EOF producer (putter) and consumer (getter) clients are found 
 # in the <b>queue-eof</b> subdirectory of this project.  The objective of 
-# these is are to:
+# these tests is to:
 #
 # * Start a message getter which continuously waits for messages.
 # * Ends when special EOF messsage is encountered on the input queue.
@@ -120,3 +120,4 @@
 #
 # Documentation TBD.
 #
+
