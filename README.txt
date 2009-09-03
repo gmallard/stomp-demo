@@ -63,7 +63,7 @@
 #
 # Before running any of the command line tests described below, you must
 # have a server (stompserver or AMQ) up and running.  Furthermore, any AMQ
-# server must be configured to accept the stomp message protocaols.
+# server must be configured to accept the stomp message protocols.
 #
 # == Client To Server Connection Parameters
 #
