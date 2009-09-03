@@ -21,7 +21,8 @@
 # stomp:: gem version 1.1
 # stompserver:: gem version 0.9.9
 # AMQ:: Version 5.2.0
-# ruby:: ruby 1.8.7 (2008-08-11 patchlevel 72) [i486-linux]
+# ruby18:: ruby 1.8.7 (2008-08-11 patchlevel 72) [i486-linux]
+# ruby19:: ruby 1.9.0 (2008-06-20 revision 17482) [i486-linux]
 #
 # == Rdoc Generation
 #
