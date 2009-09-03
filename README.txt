@@ -8,7 +8,7 @@
 # and with tests from the stomp gem.
 #
 # The default configuration in this project uses a non-default port for the
-# stompserver RUby gem.  This is because I already have a running instance 
+# stompserver Ruby gem.  This is because I already have a running instance 
 # of ActiveMQ.  My system is set up as follows:
 #
 # stompserver:: port 51613
