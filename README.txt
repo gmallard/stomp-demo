@@ -75,15 +75,15 @@
 # have a server (stompserver or AMQ) up and running.  Furthermore, any AMQ
 # server must be configured to accept the stomp message protocols.
 #
-# == Client To Server Connection Parameters
+# === Client To Server Connection Parameters
 #
 # Client to server connection parameters can best be controlled by modifying
 # the <b>props.yaml</b> configuration file found in the project's root directory.
 #
-# == Basic Producer and Consumer Tests
+# === Basic Producer and Consumer Tests
 #
 # The basic producer (putter) and consumer (getter) clients are found in the
-# *basic* subdirectory of this project.  The objective of these tests are to:
+# *basic* subdirectory of this project.  The objective of these tests is to:
 #
 # * Start a basic message getter.
 # * Send messages to the basic message getter.
@@ -95,11 +95,11 @@
 # * Terminal 2: ruby basic/queue_put.rb
 # * Terminal 2: observe output
 #
-# == Queued EOF Producer and Consumer Tests
+# === Queued EOF Producer and Consumer Tests
 #
 # The queued EOF producer (putter) and consumer (getter) clients are found 
 # in the <b>queue-eof</b> subdirectory of this project.  The objective of 
-# these tests are to:
+# these is are to:
 #
 # * Start a message getter which continuously waits for messages.
 # * Ends when special EOF messsage is encountered on the input queue.
@@ -116,7 +116,7 @@
 # * Terminal 2: ruby queue-eof/queue_put.rb TRUE
 # * Terminal 1: Observe output
 #
-# == Threaded Producer and Consumer Test
+# === Threaded Producer and Consumer Test
 #
 # Documentation TBD.
 #
