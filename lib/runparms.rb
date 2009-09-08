@@ -30,20 +30,16 @@ class Runparms
       @port = yaml_parms[:port]
     end
     #
+    # Override with CTOR parms or hard coded values.
     #
-    # Override with CTOR parms.
-    #
-    @userid = params[:userid] if params[:userid]
-    @password = params[:password] if params[:password]
-    @host = params[:host] if params[:host]
-    @port = params[:port] if params[:port]
-    #
-    # Last resort is hard coded values here.
-    #
-    @userid = "login" if not @userid
-    @password = "passcode" if not @password
-    @host = "localhost" if not @host
-    @port = 51613 if not @port
+    @userid = params[:userid] = params[:userid] ?
+      params[:userid] : "login"
+    @password = params[:password] = params[:password] ?
+      params[:password] : "passcode"
+    @host = params[:host] = params[:host] ?
+      params[:host] : "localhost"
+    @port = params[:port] = params[:port] ?
+      params[:port] : 51613
   end
   #
   def to_s
