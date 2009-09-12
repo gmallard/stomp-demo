@@ -54,4 +54,12 @@ namespace :threaded do
     ruby %{"threaded/getters-demo.rb"}
   end
 end # namespace :threaded
+#
+namespace :monitor do
+  #
+  desc 'Run queue mnitor'
+  task :monitor do
+    ruby %{"monitor/stompmon.rb"}
+  end
+end # namespace :monitor
 
