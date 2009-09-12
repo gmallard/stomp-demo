@@ -17,10 +17,10 @@ class Runparms
     # Properties from YAML file first.
     #
     yfname = File.join(File.dirname(__FILE__), "..", "props.yaml")
-    @@log.debug "YAML Parms File Name: #{yfname}"
+    @@log.debug "YAML Parms: File Name: #{yfname}"
     yaml_params = nil
     if File.exists?(yfname)
-      @@log.debug "Exists!"
+      @@log.debug "YAML Parms: #{yfname} exists!"
       yaml_parms = YAML.load(File.open(yfname))
       @@log.debug "YAML Parms: #{yaml_parms.inspect}"
       #
