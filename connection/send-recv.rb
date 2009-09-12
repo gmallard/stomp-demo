@@ -1,0 +1,64 @@
+require 'rubygems'
+require 'stomp'
+require 'logger'
+$:.unshift File.join(File.dirname(__FILE__), "..", "lib")
+require 'runparms'
+require 'stomphelper'
+#
+# = Connection Sender and Receiver
+#
+class SenderReceiver
+  #
+  # Create a new sender/receiver
+  #
+  def initialize(params={})
+    @@log = Logger.new(STDOUT)
+    @@log.level = Logger::DEBUG
+    #
+    # set defaults or overrides
+    #
+    @max_msgs = params[:max_msgs] ? params[:max_msgs] : 5
+    @queue_name = params[:queue_name] ? params[:queue_name] : 
+      StompHelper::make_destination("/sendrecv")
+    @@log.debug("S/R Queue name: #{@queue_name}")
+    #
+    runparms = Runparms.new(params)
+    @@log.debug runparms.to_s
+    @conn = Stomp::Connection.open(runparms.userid, runparms.password, 
+      runparms.host, runparms.port)
+  end
+  #
+  def subscribe
+    @conn.subscribe @queue_name
+  end
+  #
+  def send_messages
+    @@log.debug("send_messages starts")
+    for msgnum in (0..@max_msgs-1) do
+      next_msg = "Message number: #{msgnum+1}"
+      @@log.debug("Next to send: #{next_msg}")
+      @conn.send @queue_name, next_msg
+    end
+  end
+  #
+  def get_messages
+    @@log.debug("get_messages starts")
+    subscribe
+    for msgnum in (0..@max_msgs-1) do
+      message = @conn.receive
+      @@log.debug("Received: #{message}")
+    end
+
+  end
+  #
+  private
+  #
+  def subscribe
+    @conn.subscribe @queue_name
+  end
+end
+#
+csr = SenderReceiver.new
+csr.send_messages
+csr.get_messages
+

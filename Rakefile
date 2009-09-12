@@ -57,9 +57,17 @@ end # namespace :threaded
 #
 namespace :monitor do
   #
-  desc 'Run queue mnitor'
+  desc 'Run queue monitor'
   task :monitor do
     ruby %{"monitor/stompmon.rb"}
   end
 end # namespace :monitor
+#
+namespace :conn do
+  #
+  desc 'Run connection sender/receiver'
+  task :sendreceive do
+    ruby %{"connection/send-recv.rb"}
+  end
+end # namespace :conn
 
