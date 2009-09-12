@@ -41,17 +41,24 @@ class StompMonitor
           #
           # received = message
         end
-      @@log.debug "Monitor main starting to sleep"
-      sleep 5 until received
+      sl_count = 0
+      begin
+        sl_count += 1
+        @@log.debug "Monitor main sleeping, loop number: #{sl_count}"
+        sleep 10
+      end until received
       # Never get here.
     end
   end
   #
   private
   def proc_message(m)
-    @@log.debug("#{m.inspect}")
-    to_print = m.body.gsub("\n"," ")
-    @@log.info("#{to_print}")
+    qlist = m.body.split("\n\n").sort
+    @@log.info("=" * 30)
+    qlist.each do |aq|
+      top = aq.gsub("\n"," ")
+      @@log.info("#{top}")
+    end
   end
 end
 #
