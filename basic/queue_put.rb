@@ -24,6 +24,7 @@ class BasicMessagePutter
     @max_msgs = params[:max_msgs] ? params[:max_msgs] : 5
     @queue_name = params[:queue_name] ? params[:queue_name] : 
       StompHelper::make_destination("/test")
+    @@log.debug("Put Queue name: #{@queue_name}")
     @client_id = params[:client_id] ? params[:client_id] : "Client1"
     #
     runparms = Runparms.new(params)

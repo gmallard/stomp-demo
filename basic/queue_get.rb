@@ -23,6 +23,7 @@ class BasicMessageGetter
     #
     @queue_name = params[:queue_name] ? params[:queue_name] : 
       StompHelper::make_destination("/testbasic")
+    @@log.debug("Get Queue name: #{@queue_name}")
     @client_id = params[:client_id] ? params[:client_id] : "Client1"
     runparms = Runparms.new(params)
     @@log.debug runparms.to_s
