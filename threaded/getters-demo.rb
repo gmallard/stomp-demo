@@ -12,6 +12,7 @@ require 'stomp'
 require 'logger'
 $:.unshift File.join(File.dirname(__FILE__), "..", "lib")
 require 'runparms'
+require 'stomphelper'
 #
 class ThreadedGetters
   #
@@ -24,7 +25,7 @@ class ThreadedGetters
     @@log.level = Logger::DEBUG
     #
     @queue_name_base = params[:queue_name_base] ? 
-      params[:queue_name_base] : "/queue/testbasic"
+      params[:queue_name_base] : StompHelper::make_destination("/testbasic")
     @max_getters = params[:max_getters] ? 
       params[:max_getters] : 2 - 1
     @max_wke = params[:max_wke] ? 

@@ -3,6 +3,7 @@ require 'stomp'
 require 'logger'
 $:.unshift File.join(File.dirname(__FILE__), "..", "lib")
 require 'runparms'
+require 'stomphelper'
 #
 # = Queue EOF Message Getter
 #
@@ -21,7 +22,8 @@ class QEofMessageGetter
     @runparms = Runparms.new
     @@log.debug @runparms.to_s
     #
-    @queue_name = params[:queue_name] ? params[:queue_name] : "/queue/contrun"
+    @queue_name = params[:queue_name] ? params[:queue_name] : 
+      StompHelper::make_destination("/contrun")
     @client_id = params[:client_id] ? params[:client_id] : "rubyClient"
   end
   #

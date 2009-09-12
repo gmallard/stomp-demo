@@ -3,6 +3,7 @@ require 'stomp'
 require 'logger'
 $:.unshift File.join(File.dirname(__FILE__), "..", "lib")
 require 'runparms'
+require 'stomphelper'
 #
 # = Queue EOF Message Putter
 #
@@ -25,7 +26,8 @@ class QEofMessagePutter
       @runparms.host, @runparms.port)
     #
     @do_eow = params[:do_eow] ? params[:do_eow] : false
-    @queue_name = params[:queue_name] ? params[:queue_name] : "/queue/contrun"
+    @queue_name = params[:queue_name] ? params[:queue_name] : 
+      StompHelper::make_destination("/contrun")
     @client_id = params[:client_id] ? params[:client_id] : "ClientEOF0"
     @max_msgs = params[:max_msgs] ? params[:max_msgs] : 5
   end

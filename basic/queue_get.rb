@@ -3,6 +3,7 @@ require 'stomp'
 require 'logger'
 $:.unshift File.join(File.dirname(__FILE__), "..", "lib")
 require 'runparms'
+require 'stomphelper'
 #
 # = Basic Message Getter
 #
@@ -20,7 +21,8 @@ class BasicMessageGetter
     #
     # set defaults or overrides
     #
-    @queue_name = params[:queue_name] ? params[:queue_name] : "/queue/testbasic"
+    @queue_name = params[:queue_name] ? params[:queue_name] : 
+      StompHelper::make_destination("/testbasic")
     @client_id = params[:client_id] ? params[:client_id] : "Client1"
     runparms = Runparms.new(params)
     @@log.debug runparms.to_s
@@ -53,6 +55,7 @@ class BasicMessageGetter
   end
 end
 #
-getter = BasicMessageGetter.new(:queue_name => "/queue/testbasic")
+getter = BasicMessageGetter.new(:queue_name => 
+  StompHelper::make_destination("/testbasic") )
 getter.get_messages
 

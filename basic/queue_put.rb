@@ -3,6 +3,7 @@ require 'stomp'
 require 'logger'
 $:.unshift File.join(File.dirname(__FILE__), "..", "lib")
 require 'runparms'
+require 'stomphelper'
 #
 # = Basic Message Putter
 #
@@ -21,7 +22,8 @@ class BasicMessagePutter
     # set defaults or overrides
     #
     @max_msgs = params[:max_msgs] ? params[:max_msgs] : 5
-    @queue_name = params[:queue_name] ? params[:queue_name] : "/queue/test"
+    @queue_name = params[:queue_name] ? params[:queue_name] : 
+      StompHelper::make_destination("/test")
     @client_id = params[:client_id] ? params[:client_id] : "Client1"
     #
     runparms = Runparms.new(params)
@@ -44,10 +46,16 @@ class BasicMessagePutter
     @@log.debug "putter client ending"
     @client.close
   end
+  #
+  # String representation
+  #
+  def to_s
+    "max_msgs: #{max_msgs} queue_name: #{queue_name} client_id: #{client_id}"
+  end
 end
 #
 putter = BasicMessagePutter.new(:max_msgs => 10, 
-  :queue_name => "/queue/testbasic")
+  :queue_name => StompHelper::make_destination("/testbasic") )
 putter.put_messages
 
 
