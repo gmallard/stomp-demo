@@ -96,6 +96,13 @@
 # * Terminal 2: ruby basic/queue_put.rb
 # * Terminal 2: observe output
 #
+# Alternate run method:
+#
+# * Terminal 1: rake basic:getter
+# * Terminal 1: observe output
+# * Terminal 2: rake basic:putter
+# * Terminal 2: observe output
+#
 # === Queued EOF Producer and Consumer Tests
 #
 # The queued EOF producer (putter) and consumer (getter) clients are found 
@@ -117,8 +124,32 @@
 # * Terminal 2: ruby queue-eof/queue_put.rb TRUE
 # * Terminal 1: Observe output
 #
+# Alternate run method:
+#
+# * Terminal 1: rake qeof:getter
+# * Terminal 2: rake qeof:putter
+# * Terminal 1: Observe output
+# * Terminal 2: Repeat the queue_put step one or many times
+# * Terminal 1: Observe output
+# * Terminal 2: rake qeof:putter_true
+# * Terminal 1: Observe output
+#
 # === Threaded Producer and Consumer Test
 #
-# Documentation TBD.
+# Show an example with the following characteristics:
+#
+# * A putter knows how many getters (n) will be processing messages
+# * The putter evenly distributes messages across (n) queues 
+# * (n) getter threads are started, and process messages
+#
+# To run these tests:
+#
+# * Terminal 1: ruby threaded/getters_demo.rb
+# * Terminal 1: Observe output
+#
+# Alternate run method:
+#
+# * Terminal 1: rake threaded:getters
+# * Terminal 1: Observe output
 #
 
