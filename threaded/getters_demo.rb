@@ -29,7 +29,7 @@ class ThreadedGetters
     @max_getters = params[:max_getters] ? 
       params[:max_getters] : 2 - 1
     @max_wke = params[:max_wke] ? 
-      params[:max_wke] : 2 - 1
+      params[:max_wke] : 6 - 1
     #
     @getters = nil
     @runparms = Runparms.new
@@ -49,11 +49,15 @@ class ThreadedGetters
           @runparms.host, @runparms.port)
         received = nil
         client_name = "GetterClient#{getter_num}"
+        lmsg = "thread loop, thread is: #{Thread.current}, "
+        lmsg += "client #{client_name}, "
+        lmsg += "name #{name}"
+        @@log.debug "#{lmsg}"
         client.subscribe(queue_name(getter_num), {
                         "persistent" => true,
                         "client-id" => client_name,
                 } ) do |message|
-          # @@log.debug "#{p message}"
+          @@log.debug "subscribe loop, thread is: #{Thread.current}, client #{client_name}"
           lmsg = "#{name} Got Reply: BODY=#{message.body} "
           lmsg += "on QUEUE #{message.headers['destination']}"
           @@log.debug "#{lmsg}"
@@ -109,8 +113,8 @@ class ThreadedGetters
 end
 #
 threader = ThreadedGetters.new
-threader.run_putter
 puts "Starting putter"
+threader.run_putter
 threader.start_getters
 puts "Starting getter wait"
 threader.getters.each {|th| th.join}
