@@ -14,6 +14,12 @@
 # stompserver:: port 51613
 # AMQ:: port => 61613
 #
+# === stomp Message Protocol
+#
+# Documentation of the stomp message protocol can be found here:
+#
+# * http://stomp.codehaus.org/Specification
+#
 # == Software Versions
 #
 # This project is currently based on:
@@ -23,6 +29,12 @@
 # AMQ:: Version 5.2.0
 # ruby18:: ruby 1.8.7 (2008-08-11 patchlevel 72) [i486-linux]
 # ruby19:: ruby 1.9.0 (2008-06-20 revision 17482) [i486-linux]
+#
+# === stomp Gem Note
+#
+# No rdoc documentation was produced during the standard install of this
+# gem.  It is not clear why this happened.  I uninstalled the gem, and 
+# reinstalled with the '--rdoc --ri' options, and all was well.
 #
 # == Rdoc Generation
 #
@@ -60,7 +72,15 @@
 #
 # == Active MQ Configuration
 #
-# Documentation TBD.
+# Active MQ requires tthe following addition to the standard <b>activemq.xml</b>
+# file in order to support the stomp protocol:
+#
+#  <!-- The transport connectors ActiveMQ will listen to -->
+#  <transportConnectors>
+#      .....
+#      <transportConnector name="stomp" uri="stomp://localhost:61613"/>
+#      .....
+#  </transportConnectors>
 #
 # == Testing
 #
@@ -92,16 +112,16 @@
 # To run these tests:
 #
 # * Terminal 1: ruby basic/queue_get.rb
-# * Terminal 1: observe output
+# * Terminal 1: Observe output
 # * Terminal 2: ruby basic/queue_put.rb
-# * Terminal 2: observe output
+# * Terminal 2: Observe output
 #
 # Alternate run method:
 #
 # * Terminal 1: rake basic:getter
-# * Terminal 1: observe output
+# * Terminal 1: Observe output
 # * Terminal 2: rake basic:putter
-# * Terminal 2: observe output
+# * Terminal 2: Observe output
 #
 # === Queued EOF Producer and Consumer Tests
 #
@@ -110,7 +130,7 @@
 # these tests is to:
 #
 # * Start a message getter which continuously waits for messages.
-# * Ends when special EOF messsage is encountered on the input queue.
+# * Ends when a special EOF messsage is encountered on the input queue.
 # * Send many messages to the message getter.
 # * Eventually send the special EOF message.
 #
@@ -134,7 +154,7 @@
 # * Terminal 2: rake qeof:putter_true
 # * Terminal 1: Observe output
 #
-# === Threaded Producer and Consumer Test
+# === Single Producer and Threaded Consumer Test
 #
 # Show an example with the following characteristics:
 #
@@ -151,5 +171,57 @@
 #
 # * Terminal 1: rake threaded:getters
 # * Terminal 1: Observe output
+#
+# === stomp Monitor Demonstration
+#
+# Show an example of a stomp server monitor, as described in the stompserver
+# rdoc's.
+#
+# To run this demonstration:
+#
+# * Terminal 1: ruby monitor/stompmon.rb
+# * Terminal X: Run individual putter tests to place messages on queues
+# * Terminal 1: Observe queue statistics updates every five seconds
+#
+# Alternate run method:
+#
+# * Terminal 1: rake monitor:monitor
+# * Terminal X: Run individual putter tests to place messages on queues
+# * Terminal 1: Observe queue statistics updates every five seconds
+#
+# ==== Note
+#
+# This demonstration is stompserver specific.  It should run on Active MQ,
+# but will display nothing of interest (this is untested).
+#
+# === stomp Connection Object Demonstration
+#
+# Show an example of using a stomp +connection+ object to send and 
+# receive messages synchronously.
+#
+# To run this demonstration:
+#
+# * Terminal 1: ruby connection/send_recv.rb
+# * Terminal 1: Observe output
+#
+# Alternate run method:
+#
+# Terminal 1: rake conn:sendreceive
+# * Terminal 1: Observe output
+#
+# === Utilities
+#
+# Provide utilities for working with the code in this project.
+#
+# ==== Clear Queue
+#
+# This utility can be used to drain / clear a queue of all messages.
+#
+# To run the clear queue utility:
+#
+# * ruby utils/clearq.rb "/queue/qname"
+#
+# The +full+ name of the queue to clear +must+ be provided as the first 
+# command line argument.
 #
 
