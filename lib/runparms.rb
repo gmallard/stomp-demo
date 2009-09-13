@@ -1,4 +1,9 @@
 #
+# = Run Parameters Data
+#
+# Instances of this class contain connection parameters for a given
+# sromp server connection.
+#
 require 'logger'
 require 'yaml'
 #
@@ -6,8 +11,24 @@ class Runparms
   #
   Runparms::EOF_MSG = "__END_OF_WORK__"
   #
-  attr_reader :userid, :password, :host, :port
+  # The user ID to connect with.
   #
+  attr_reader :userid
+  #
+  # The user's password.
+  #
+  attr_reader :password
+  #
+  # The stompserver host name or IP address to connect to.
+  #
+  attr_reader :host
+  #
+  # The stompserver listening port.
+  #
+  attr_reader :port
+  #
+  # Initialize runtime connection parameters.
+#
   def initialize(params={})
     @@log = Logger.new(STDOUT)
     @@log.level = Logger::DEBUG
@@ -41,6 +62,8 @@ class Runparms
     @port = params[:port] = params[:port] ?
       params[:port] : 51613
   end
+  #
+  # Return string representation.
   #
   def to_s
     "Userid=#{@userid}, Password=#{@password}, Host=#{@host}, Port=#{@port}"

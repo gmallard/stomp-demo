@@ -48,7 +48,7 @@ class BasicMessagePutter
     @client.close
   end
   #
-  # String representation
+  # Return the string representation.
   #
   def to_s
     "max_msgs: #{max_msgs} queue_name: #{queue_name} client_id: #{client_id}"

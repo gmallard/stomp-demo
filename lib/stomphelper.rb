@@ -1,7 +1,11 @@
 #
+# = Stommp Helper Container
+#
 class StompHelper
   #
   class << self
+    #
+    # Return a stomp queue name.
     #
     def make_destination(qpart)
       nospec = qpart.gsub(":","")
@@ -11,6 +15,7 @@ class StompHelper
       end
       qret
     end
-  end
-end
+    #
+  end # end of << self
+end # end of StompHelper
 

@@ -9,9 +9,19 @@ require 'stomphelper'
 #
 # Drain a queue of any existing messages.
 #
+# Note - the full queue name must be specified on the command line, e.g.:
+#
+# * ruby utils/clearq.rb "/queue/queuename"
+#
 class QueueClearer
   #
-  attr_reader :queue_name, :client_id
+  # The queue name.
+  #
+  attr_reader :queue_name
+  #
+  # The connection client id.
+  #
+  attr_reader :client_id
   #
   # Create new message getter.
   #

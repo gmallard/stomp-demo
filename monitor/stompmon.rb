@@ -1,6 +1,12 @@
 #
 # = Stomp Queue Monitor
 #
+# Subscribe to /queue/monitor, per the stompserver README, and output
+# the current statistics for existing queues.
+#
+# I suspect this does not work (or does nothing) whe connected to Active
+# MQ.
+#
 require 'rubygems'
 require 'stomp'
 require 'logger'

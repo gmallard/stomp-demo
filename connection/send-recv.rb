@@ -7,6 +7,8 @@ require 'stomphelper'
 #
 # = Connection Sender and Receiver
 #
+# Show use of a stomp connection used to send and receive messages.
+#
 class SenderReceiver
   #
   # Create a new sender/receiver
@@ -28,9 +30,7 @@ class SenderReceiver
       runparms.host, runparms.port)
   end
   #
-  def subscribe
-    @conn.subscribe @queue_name
-  end
+  # Send messages using a connection.
   #
   def send_messages
     @@log.debug("send_messages starts")
@@ -40,6 +40,8 @@ class SenderReceiver
       @conn.send @queue_name, next_msg
     end
   end
+  #
+  # Receive messages using a connection.
   #
   def get_messages
     @@log.debug("get_messages starts")
@@ -52,6 +54,8 @@ class SenderReceiver
   end
   #
   private
+  #
+  # Subscribe to a destination.
   #
   def subscribe
     @conn.subscribe @queue_name

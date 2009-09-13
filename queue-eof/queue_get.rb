@@ -27,7 +27,7 @@ class QEofMessageGetter
     @client_id = params[:client_id] ? params[:client_id] : "rubyClient"
   end
   #
-  # Get messages from a queue.  Keep running until a apecially formatted
+  # Get messages from a queue.  Keep running until a specially formatted
   # message which signals "end of work" is received.
   #
   def get_messages

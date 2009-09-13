@@ -10,7 +10,11 @@ require 'stomphelper'
 # Show a +specialized+ stomp client which puts messages to a queue.
 #
 # This client has the ability to put a special EOF message on the queue
-# at the end of processing.
+# at the end of processing.  This is accomplished by passing a command line
+# parameter which contains the word "true" any where in it.  Case is not
+# important.  Example:
+#
+# * ruby queue-eof/queue_put.rb "TrUe"
 #
 class QEofMessagePutter
   #
