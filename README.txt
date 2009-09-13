@@ -72,7 +72,7 @@
 #
 # == Active MQ Configuration
 #
-# Active MQ requires tthe following addition to the standard <b>activemq.xml</b>
+# Active MQ requires the following addition to the standard <b>activemq.xml</b>
 # file in order to support the stomp protocol:
 #
 #  <!-- The transport connectors ActiveMQ will listen to -->
