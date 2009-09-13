@@ -51,7 +51,7 @@ namespace :threaded do
   #
   desc 'Run threaded example'
   task :getters do
-    ruby %{"threaded/getters-demo.rb"}
+    ruby %{"threaded/getters_demo.rb"}
   end
 end # namespace :threaded
 #
@@ -67,7 +67,7 @@ namespace :conn do
   #
   desc 'Run connection sender/receiver'
   task :sendreceive do
-    ruby %{"connection/send-recv.rb"}
+    ruby %{"connection/send_recv.rb"}
   end
 end # namespace :conn
 
