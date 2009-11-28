@@ -27,8 +27,25 @@
 # stomp:: gem version 1.1
 # stompserver:: gem version 0.9.9
 # AMQ:: Version 5.2.0
+#
+# Client code (the getters and putters) testing has been completed 
+# successfully under:
+#
 # ruby18:: ruby 1.8.7 (2008-08-11 patchlevel 72) [i486-linux]
 # ruby19:: ruby 1.9.0 (2008-06-20 revision 17482) [i486-linux]
+# ruby191:: ruby 1.9.1p243 (2009-07-16 revision 24175) [i486-linux]
+#
+# During those tests the stompserver continued to run on Ruby 1.8.7.
+#
+# === stompserver Note
+#
+# This code needs to be tested with the stompserver running under Ruby:
+#
+# * 1.9.0
+# * 1.9.1
+#
+# The author suspects there will be problems in these cases, but this
+# should be verified and documented.
 #
 # === stomp Gem Note
 #
