@@ -47,6 +47,23 @@
 # The author suspects there will be problems in these cases, but this
 # should be verified and documented.
 #
+# --------
+#
+# There are indeed several problems with the stompserver running under 1.9.1.
+# Investigation using 1.9.0 is yet to be done.
+#
+# An experimental version of server code modified for 1.9.1 is available by:
+#
+# *	git clone git://github.com/gmallard/stompserver.git
+#
+# Note!: the experimental version also includes modifications to:
+#
+# * active record support for MySql
+# * additions for using standard ruby 'logger' style logging
+#
+# To obtain a _minimal_ set of server changes for 1.9.1, see the 'minimal_19x'
+# branch at that location.
+#
 # === stomp Gem Note
 #
 # No rdoc documentation was produced during the standard install of this
