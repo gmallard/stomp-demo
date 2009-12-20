@@ -41,6 +41,7 @@ class BasicMessageGetter
     # Note: in the subscribe loop there is actually a separate
     # thread!!
     #
+    count = 0
     @client.subscribe(@queue_name,
      {"persistent" => true, "client-id" => @client_id} ) do |message|
       @@log.debug "subscribe loop, thread is: #{Thread.current}"
@@ -49,9 +50,11 @@ class BasicMessageGetter
       lmsg += "on QUEUE #{message.headers['destination']}"
       @@log.debug "#{lmsg}"
       received = message
+      count += 1
     end
     sleep 0.1 until received
     @client.close
+    @@log.debug "getter client received count: #{count}"
     @@log.debug "getter client ending, thread is: #{Thread.current}"
   end
 end
