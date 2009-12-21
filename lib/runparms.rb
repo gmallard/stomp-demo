@@ -38,29 +38,32 @@ class Runparms
     # Properties from YAML file first.
     #
     yfname = File.join(File.dirname(__FILE__), "..", "props.yaml")
-    @@log.debug "YAML Parms: File Name: #{yfname}"
-    yaml_params = nil
+    yaml_params = {}
     if File.exists?(yfname)
       @@log.debug "YAML Parms: #{yfname} exists!"
       yaml_parms = YAML.load(File.open(yfname))
       @@log.debug "YAML Parms: #{yaml_parms.inspect}"
       #
-      @userid = yaml_parms[:user_id]
+      @userid = yaml_parms[:userid]
       @password = yaml_parms[:password]
       @host = yaml_parms[:host]
       @port = yaml_parms[:port]
     end
     #
-    # Override with CTOR parms or hard coded values.
+    # Override with CTOR parms if present
     #
-    @userid = params[:userid] = params[:userid] ?
-      params[:userid] : "login"
-    @password = params[:password] = params[:password] ?
-      params[:password] : "passcode"
-    @host = params[:host] = params[:host] ?
-      params[:host] : "localhost"
-    @port = params[:port] = params[:port] ?
-      params[:port] : 51613
+    @userid = params[:userid] if params[:userid]
+    @password = params[:password] if params[:password]
+    @host = params[:host] if params[:host]
+    @port = params[:port] if params[:port]
+    #
+    # Override with hard coded values if still no definition
+    #
+    @userid = "login" if not @userid
+    @password = "passcode" if not @password
+    @host = "localhost" if not @host
+    @port = 51613 if not @port
+    #
   end
   #
   # Return string representation.
