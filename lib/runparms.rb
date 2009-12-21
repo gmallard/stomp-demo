@@ -6,6 +6,7 @@
 #
 require 'logger'
 require 'yaml'
+require 'optparse'
 #
 class Runparms
   #
@@ -57,6 +58,12 @@ class Runparms
     @host = params[:host] if params[:host]
     @port = params[:port] if params[:port]
     #
+    clopts = get_opts()
+    @userid = clopts[:userid] if clopts[:userid]
+    @password = clopts[:password] if clopts[:password]
+    @host = clopts[:host] if clopts[:host]
+    @port = clopts[:port] if clopts[:port]
+    #
     # Override with hard coded values if still no definition
     #
     @userid = "login" if not @userid
@@ -70,6 +77,43 @@ class Runparms
   #
   def to_s
     "Userid=#{@userid}, Password=#{@password}, Host=#{@host}, Port=#{@port}"
+  end
+
+  private
+  # Parse command line options
+  def get_opts()
+    clopts = {}
+    parser = OptionParser.new
+
+    # :userid
+    parser.on("-u", "--user=LOGINID", String, 
+      "Server user id (Default: login)") {|lid| 
+      clopts[:userid] = lid}
+
+    # :password
+    parser.on("-p", "--password=PASSWORD", String, 
+      "Server password (Default: passcode)") {|pw| 
+      clopts[:password] = pw}
+
+    # :host
+    parser.on("-s", "--server=SERVERNAME", String, 
+      "Hostname of server (Default: localhost)") {|host| 
+      clopts[:host] = host}
+
+    # :port
+    parser.on("-P", "--port=PORT", Integer,
+      "Port number of server (Default: 51613)") {|port| 
+      clopts[:port] = port}
+
+    # Handle help if required
+    parser.on("-h", "--help", "Show this message") do
+      puts parser
+      exit
+    end
+    # Run the parse
+    parser.parse(ARGV)
+    # Return found options
+    clopts    
   end
 end
 

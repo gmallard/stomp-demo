@@ -49,10 +49,8 @@
 #
 # --------
 #
-# There are indeed several problems with the stompserver running under 1.9.1.
-# Investigation using 1.9.0 is yet to be done.
-#
-# An experimental version of server code modified for 1.9.1 is available by:
+# An experimental version of server code modified for 1.9.0 and 1.9.1  is 
+# available by:
 #
 # *	git clone git://github.com/gmallard/stompserver.git
 #
@@ -61,7 +59,7 @@
 # * active record support for MySql
 # * additions for using standard ruby 'logger' style logging
 #
-# To obtain a _minimal_ set of server changes for 1.9.1, see the 'minimal_19x'
+# To obtain a _minimal_ set of server changes for 1.9.x, see the 'minimal_19x'
 # branch at that location.
 #
 # === stomp Gem Note
@@ -82,7 +80,7 @@
 #
 # Note: these options are for stompserver and have nothing to do with AMQ.
 #
-# Command line options for the stompserver are:
+# Command line options for the stompserver 0.9.9 level are:
 #
 # -C, --config=CONFIGFILE:: Configuration File (default: stompserver.conf)
 # -p, --port=PORT:: Change the port (default: 61613)
@@ -135,6 +133,10 @@
 # Client to server connection parameters can best be controlled by modifying
 # the <b>props.yaml</b> configuration file found in the project's root directory.
 #
+# Also note that command line parameter overrides are allowed, see below.
+# <b>However</b> the rake tests described here do <b>not</b> currently 
+# support parameter overrides from the command line. <b>Beware!</b>
+#
 # === Basic Producer and Consumer Tests
 #
 # The basic producer (putter) and consumer (getter) clients are found in the
@@ -177,6 +179,10 @@
 # * Terminal 1: Observe output
 # * Terminal 2: ruby queue-eof/queue_put.rb TRUE
 # * Terminal 1: Observe output
+#
+# Note: when TRUE is passed to the message putter, it _must_ be the first
+# command line parameter passed.  Any command line parameter overrides 
+# should be coded later.
 #
 # Alternate run method:
 #
@@ -257,5 +263,32 @@
 #
 # The +full+ name of the queue to clear +must+ be provided as the first 
 # command line argument.
+#
+# == Overriding Parameters in the Configuration File
+#
+# Command line parameters can override those specified in the <b>props.yaml</b>
+# configuration file.  A summary of the command line overrides allowed is 
+# shown here:
+#
+# -u userid::
+#     The user id to connect to the server with.
+# --user=userid::
+#     Same as -u.
+# -p password::
+#     The server password to use.
+# --password=password::
+#     Same as -p.
+# -s servername::
+#     The server name to connect to.  An IP address may be used.
+# --server=servername::
+#     Same as -s.
+# -P portnumber::
+#     The port the server is serving from.
+# --port=portnumber::
+#     Same as -P.
+# -h::
+#     Get help on the command line options, and exit.
+# --help::
+#     Same as -h.
 #
 
