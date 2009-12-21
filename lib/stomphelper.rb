@@ -16,6 +16,19 @@ class StompHelper
       qret
     end
     #
+    def get_queue_name(default)
+      case
+        when ARGV.size > 0 
+          case
+            when ARGV[0][0..0] == "-"
+              qname = StompHelper::make_destination(default)
+            else
+              qname = StompHelper::make_destination(ARGV[0])
+          end
+        else
+          qname = StompHelper::make_destination(default)
+      end
+    end
   end # end of << self
 end # end of StompHelper
 

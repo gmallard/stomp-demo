@@ -59,8 +59,7 @@ class BasicMessageGetter
   end
 end
 #
-qname = ARGV[0] ? StompHelper::make_destination(ARGV[0]) :
-  StompHelper::make_destination("/testbasic")
+qname = StompHelper.get_queue_name("/testbasic")
 #
 getter = BasicMessageGetter.new(:queue_name => qname )
 getter.get_messages

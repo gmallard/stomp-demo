@@ -55,8 +55,7 @@ class BasicMessagePutter
   end
 end
 #
-qname = ARGV[0] ? StompHelper::make_destination(ARGV[0]) :
-  StompHelper::make_destination("/testbasic")
+qname = StompHelper.get_queue_name("/testbasic")
 #
 putter = BasicMessagePutter.new(:max_msgs => 10, 
   :queue_name => qname )
