@@ -15,7 +15,7 @@ require 'runparms'
 require 'stomphelper'
 #
 class ThreadedGetters
-  #
+  # Getter thread list.
   attr_reader :getters
   #
   # Initialize all run parameters.
@@ -27,9 +27,9 @@ class ThreadedGetters
     @queue_name_base = params[:queue_name_base] ? 
       params[:queue_name_base] : StompHelper::make_destination("/testbasic")
     @max_getters = params[:max_getters] ? 
-      params[:max_getters] : 2 - 1
+      params[:max_getters] : 3 - 1
     @max_wke = params[:max_wke] ? 
-      params[:max_wke] : 6 - 1
+      params[:max_wke] : 10 - 1
     #
     @getters = nil
     @runparms = Runparms.new
@@ -41,7 +41,7 @@ class ThreadedGetters
   # Start (n) getter threads.  Each thread runs until it's individual
   # input queue is empty.
   #
-  def start_getters
+  def start_getters()
     #
     @getters = (0..@max_getters).map do |i|
       Thread.new("consumer #{i}", i) do |name, getter_num|
@@ -63,6 +63,7 @@ class ThreadedGetters
           @@log.debug "#{lmsg}"
           proc_message(message)
           received = message
+          Thread::pass()
         end
         sleep 0.5 until received
         client.close
@@ -75,10 +76,10 @@ class ThreadedGetters
   #
   # * Distribute messages across (n) queues.
   #
-  def run_putter
+  def run_putter()
     client = Stomp::Client.open(@runparms.userid, @runparms.password, 
       @runparms.host, @runparms.port)
-    @@log.debug "starting puts"
+    @@log.debug "#{self.class} starting puts"
     next_queue_num = @max_getters
     for i in 0..@max_wke do
        next_queue_num += 1
@@ -87,35 +88,36 @@ class ThreadedGetters
        client_name = "PutterClient#{next_queue_num}"
        message = "WKE Num: #{i} to queue #{run_queue_name}"
        @@log.debug "Putting: #{message}"
-       client.send(run_queue_name, message, {
-        "persistent" => true,
-        "client-id" => client_name,
-        "reply-to" => run_queue_name,
+       #
+       headers = {"persistent" => true,
+          "client-id" => client_name,
+          "reply-to" => run_queue_name,
         }
-      )
+      #
+       client.send(run_queue_name, message, headers )
     end
-    @@log.debug "ending puts"
+    @@log.debug "#{self.class} ending puts"
     client.close
   end
   #
   # Real work should occur here.
   #
   private
-  def proc_message(m)
-    @@log.debug "Processing: #{m.body}"
+  def proc_message(message)
+    @@log.debug "Processing: #{message.body}"
   end
   #
   # Convenience method for obtaining a queue name.
   #
-  def queue_name(nxtn)
-    "#{@queue_name_base}#{nxtn}"
+  def queue_name(next_name)
+    "#{@queue_name_base}#{next_name}"
   end
 end
 #
-threader = ThreadedGetters.new
+threader = ThreadedGetters.new()
 puts "Starting putter"
-threader.run_putter
-threader.start_getters
+threader.run_putter()
+threader.start_getters()
 puts "Starting getter wait"
 threader.getters.each {|th| th.join}
 puts "Complete"
