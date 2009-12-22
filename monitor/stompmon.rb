@@ -23,26 +23,28 @@ class StompMonitor
     @@log = Logger.new(STDOUT)
     @@log.level = Logger::DEBUG
     @runparms = Runparms.new
-    @@log.debug @runparms.to_s
+    @@log.debug "#{self.class} #{@runparms}"
   end
   #
   # Run the monitor
   #
-  def run_monitor
-    @@log.debug("Stomp queue monitor starts.")
+  def run_monitor()
+    @@log.debug("#{self.class} Stomp queue monitor starts.")
     loop_count = 0
+    #
+    headers = {"persistent" => true, "client-id" => @client_id}
     #
     # Do this until the EOF message is received.
     #
     while (true)
       loop_count += 1
-      @@log.debug "Monitor loop count: #{loop_count}"
+      @@log.debug "#{self.class} Monitor loop count: #{loop_count}"
       #
       client = Stomp::Client.open(@runparms.userid, @runparms.password, 
         @runparms.host, @runparms.port)
       received = nil
       client.subscribe(StompHelper::make_destination("/monitor"),
-        {"persistent" => true, "client-id" => @client_id} ) do |message|
+        headers) do |message|
           proc_message(message)
           #
           # received = message
@@ -50,7 +52,7 @@ class StompMonitor
       sl_count = 0
       begin
         sl_count += 1
-        @@log.debug "Monitor main sleeping, loop number: #{sl_count}"
+        @@log.debug "#{self.class} Monitor main sleeping, loop number: #{sl_count}"
         sleep 10
       end until received
       # Never get here.
@@ -58,8 +60,8 @@ class StompMonitor
   end
   #
   private
-  def proc_message(m)
-    qlist = m.body.split("\n\n").sort
+  def proc_message(message)
+    qlist = message.body.split("\n\n").sort
     @@log.info("=" * 30)
     qlist.each do |aq|
       top = aq.gsub("\n"," ")
@@ -68,6 +70,5 @@ class StompMonitor
   end
 end
 #
-sqm = StompMonitor.new
-sqm.run_monitor
-
+sqm = StompMonitor.new()
+sqm.run_monitor()
