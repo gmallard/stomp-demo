@@ -10,8 +10,10 @@ require 'stomphelper'
 # Show a very +basic+ stomp client which gets messages from a queue.
 #
 class BasicMessageGetter
-  #
-  attr_reader :queue_name, :client_id
+  # The queue name / destination to use
+  attr_reader :queue_name
+  # The client ID used on the server
+  attr_reader :client_id
   #
   # Create new message getter.
   #
@@ -34,12 +36,12 @@ class BasicMessageGetter
   #
   # Get messages from a queue.
   #
-  def get_messages
+  def get_messages()
     @@log.debug "getter client starting, thread is: #{Thread.current}"
     received = nil
     #
     # Note: in the subscribe loop there is actually a separate
-    # thread!!
+    # thread, known as the 'callback listener'!.
     #
     count = 0
     @client.subscribe(@queue_name,
@@ -62,5 +64,4 @@ end
 qname = StompHelper.get_queue_name("/testbasic")
 #
 getter = BasicMessageGetter.new(:queue_name => qname )
-getter.get_messages
-
+getter.get_messages()

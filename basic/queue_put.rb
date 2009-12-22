@@ -10,8 +10,12 @@ require 'stomphelper'
 # Show a very +basic+ stomp client which puts messages to a queue.
 #
 class BasicMessagePutter
-  #
-  attr_reader :queue_name, :client_id, :max_msgs
+  # The destination / queue to use
+  attr_reader :queue_name
+  # The client ID on the server
+  attr_reader :client_id
+  # Maximum messages to send
+  attr_reader :max_msgs
   #
   # Create a new message putter.
   #
@@ -36,7 +40,8 @@ class BasicMessagePutter
   #
   # Put messages to a queue.
   #
-  def put_messages
+  def put_messages()
+    #
     for i in 1..@max_msgs do
        message = "Go Sox #{i}!"
        @@log.debug "#{message}"
@@ -44,13 +49,13 @@ class BasicMessagePutter
         {"persistent" => true, "client-id" => @client_id, 
          "reply-to" => @queue_name} )
     end
-    @@log.debug "putter client ending"
     @client.close
+    @@log.debug("queue_put completes")
   end
   #
   # Return the string representation.
   #
-  def to_s
+  def to_s()
     "max_msgs: #{max_msgs} queue_name: #{queue_name} client_id: #{client_id}"
   end
 end
@@ -59,6 +64,4 @@ qname = StompHelper.get_queue_name("/testbasic")
 #
 putter = BasicMessagePutter.new(:max_msgs => 10, 
   :queue_name => qname )
-putter.put_messages
-
-
+putter.put_messages()
