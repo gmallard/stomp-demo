@@ -38,32 +38,26 @@ class QEofMessagePutter
   #
   # Put messages to a queue.
   #
-  def put_messages
+  def put_messages()
+    headers = {"persistent" => true, 
+          "client-id" => @client_id,
+          "reply-to" => @queue_name}
+    #
     for i in 1..@max_msgs do
        message = "Da Bears #{i}!"
-       @@log.debug message
-       @client.send(@queue_name, message,
-         {"persistent" => true, "client-id" => @client_id,
-          "reply-to" => @queue_name} )
+       @@log.debug "#{self.class} #{message}"
+       @client.send(@queue_name, message, headers)
     end
     # EOF message
     if @do_eow
-      @@log.debug "putting end work message: #{Runparms::EOF_MSG}"
-      @client.send(@queue_name, Runparms::EOF_MSG, {
-        "persistent" => true,
-        "client-id" => @client_id,
-        "reply-to" => @queue_name,
-        }
-      )
+      @@log.debug "#{self.class} putting end work message: #{Runparms::EOF_MSG}"
+      @client.send(@queue_name, Runparms::EOF_MSG, headers)
     end
-    @@log.debug "putter client ending"
+    @@log.debug "#{self.class} putter client ending"
     @client.close
   end
 end
 #
-eow = false
-eow = true if ARGV[0] =~ /true/i
+eow = ARGV[0] =~ /true/i ? true : false
 putter = QEofMessagePutter.new(:do_eow => eow, :max_msgs => 3)
-putter.put_messages
-
-
+putter.put_messages()

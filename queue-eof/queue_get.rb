@@ -30,11 +30,13 @@ class QEofMessageGetter
   # Get messages from a queue.  Keep running until a specially formatted
   # message which signals "end of work" is received.
   #
-  def get_messages
-    @@log.debug "get messages starts"
+  def get_messages()
+    @@log.debug "#{self.class} get messages starts"
     #
     eof_msg_not_received = true
     loop_count = 0
+    #
+    headers = {"persistent" => true, "client-id" => @client_id}
     #
     # Do this until the EOF message is received.
     #
@@ -46,8 +48,7 @@ class QEofMessageGetter
         @runparms.host, @runparms.port)
       @@log.debug "next subscribe starts"
       received = nil
-      client.subscribe(@queue_name,
-        {"persistent" => true, "client-id" => @client_id} ) do |message|
+      client.subscribe(@queue_name, headers ) do |message|
           #
           lmsg = "Got Reply: ID=#{message.headers['message-id']} "
           lmsg += "BODY=#{message.body} "
@@ -57,20 +58,20 @@ class QEofMessageGetter
           proc_message(message)
           #
           if message.body == Runparms::EOF_MSG
-            @@log.debug "should be done"
+            @@log.debug "#{self.class} should be done"
             eof_msg_not_received = false
             break
           end
           received = message
         end
-      @@log.debug "Starting to sleep"
+      @@log.debug "#{self.class} Starting to sleep"
       sleep 0.1 until received
-      @@log.debug "Ending sleep"
-      client.close
+      @@log.debug "#{self.class} Ending sleep"
+      client.close()
       received = nil
-      @@log.debug "getter client loop ending"
+      @@log.debug "#{self.class} getter client loop ending"
     end
-    @@log.debug "getter client ending"
+    @@log.debug "#{self.class} getter client ending"
   end
 
   private
@@ -79,6 +80,5 @@ class QEofMessageGetter
   end
 end
 #
-getter = QEofMessageGetter.new
-getter.get_messages
-
+getter = QEofMessageGetter.new()
+getter.get_messages()
