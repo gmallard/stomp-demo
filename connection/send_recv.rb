@@ -32,7 +32,7 @@ class SenderReceiver
   #
   # Send messages using a connection.
   #
-  def send_messages
+  def send_messages()
     @@log.debug("send_messages starts")
     for msgnum in (0..@max_msgs-1) do
       next_msg = "Message number: #{msgnum+1}"
@@ -43,7 +43,7 @@ class SenderReceiver
   #
   # Receive messages using a connection.
   #
-  def get_messages
+  def get_messages()
     @@log.debug("get_messages starts")
     subscribe
     for msgnum in (0..@max_msgs-1) do
@@ -53,16 +53,27 @@ class SenderReceiver
 
   end
   #
+  # Run a clean disconnect
+  #
+  def shutdown()
+    if @conn
+      @conn.unsubscribe(@queue_name)
+      @@log.debug("Unsubscribe complete")
+      @conn.disconnect()
+      @@log.debug("Disconnect complete")
+    end
+  end
+  #
   private
   #
   # Subscribe to a destination.
   #
   def subscribe
-    @conn.subscribe @queue_name
+    @conn.subscribe(@queue_name)
   end
 end
 #
-csr = SenderReceiver.new
-csr.send_messages
-csr.get_messages
-
+csr = SenderReceiver.new()
+csr.send_messages()
+csr.get_messages()
+csr.shutdown()
