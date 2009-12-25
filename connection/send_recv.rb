@@ -9,6 +9,11 @@ require 'stomphelper'
 #
 # Show use of a stomp connection used to send and receive messages.
 #
+# To help debug a problem with the stomp client code and it's interaction
+# with stompserver, and possibly AMQ as well.
+#
+$DEBUG = ENV['DEBUG'] ? ENV['DEBUG'] : false
+#
 class SenderReceiver
   #
   # Create a new sender/receiver
@@ -28,6 +33,7 @@ class SenderReceiver
     @@log.debug runparms.to_s
     @conn = Stomp::Connection.open(runparms.userid, runparms.password, 
       runparms.host, runparms.port)
+    StompHelper::pause("after connection open") if $DEBUG
   end
   #
   # Send messages using a connection.
@@ -38,6 +44,7 @@ class SenderReceiver
       next_msg = "Message number: #{msgnum+1}"
       @@log.debug("Next to send: #{next_msg}")
       @conn.send @queue_name, next_msg
+      StompHelper::pause("After first send") if (msgnum == 0 and $DEBUG)
     end
   end
   #
@@ -46,9 +53,11 @@ class SenderReceiver
   def get_messages()
     @@log.debug("get_messages starts")
     subscribe
+    StompHelper::pause("After subscribe") if $DEBUG
     for msgnum in (0..@max_msgs-1) do
       message = @conn.receive
       @@log.debug("Received: #{message}")
+      StompHelper::pause("After first receive") if (msgnum == 0 and $DEBUG)
     end
 
   end
@@ -59,8 +68,10 @@ class SenderReceiver
     if @conn
       @conn.unsubscribe(@queue_name)
       @@log.debug("Unsubscribe complete")
+      StompHelper::pause("After unsubscribe") if $DEBUG
       @conn.disconnect()
       @@log.debug("Disconnect complete")
+      StompHelper::pause("After disconnect") if $DEBUG
     end
   end
   #

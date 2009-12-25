@@ -29,6 +29,11 @@ class StompHelper
           qname = StompHelper::make_destination(default)
       end
     end
+    #
+    def pause(consmsg)
+      puts consmsg
+      gets
+    end
   end # end of << self
 end # end of StompHelper
 
