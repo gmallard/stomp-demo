@@ -61,7 +61,8 @@ class BasicMessagePutter
 end
 #
 qname = StompHelper.get_queue_name("/testbasic")
+max_msgs = StompHelper.get_maxmsgs()
 #
-putter = BasicMessagePutter.new(:max_msgs => 10, 
+putter = BasicMessagePutter.new(:max_msgs => max_msgs, 
   :queue_name => qname )
 putter.put_messages()

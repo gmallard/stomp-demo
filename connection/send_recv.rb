@@ -84,15 +84,12 @@ class SenderReceiver
   end
 end
 #
-maxmsgs = 1
-maxmsgs = ARGV[0].to_i if ARGV[0]
-parms = {:max_msgs => maxmsgs}
+qname = StompHelper.get_queue_name("/sendrecv")
+max_msgs = StompHelper.get_maxmsgs()
 #
-qname = nil
-qname = ARGV[1] if ARGV[1]
-parms[:queue_name] = qname if qname
+csr = SenderReceiver.new(:max_msgs => max_msgs, 
+  :queue_name => qname )
 #
-csr = SenderReceiver.new(parms)
 csr.send_messages()
 csr.get_messages()
 csr.shutdown()

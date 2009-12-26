@@ -80,5 +80,6 @@ class QEofMessageGetter
   end
 end
 #
-getter = QEofMessageGetter.new()
+qname = StompHelper.get_queue_name("/contrun")
+getter = QEofMessageGetter.new(:queue_name => qname)
 getter.get_messages()

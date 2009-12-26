@@ -59,5 +59,8 @@ class QEofMessagePutter
 end
 #
 eow = ARGV[0] =~ /true/i ? true : false
-putter = QEofMessagePutter.new(:do_eow => eow, :max_msgs => 3)
+qname = StompHelper.get_queue_name("/contrun")
+max_msgs = StompHelper.get_maxmsgs(:default => 3)
+putter = QEofMessagePutter.new(:do_eow => eow, :max_msgs => max_msgs,
+  :queue_name => qname)
 putter.put_messages()

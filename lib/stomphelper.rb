@@ -17,23 +17,18 @@ class StompHelper
     end
     #
     def get_queue_name(default)
-      case
-        when ARGV.size > 0 
-          case
-            when ARGV[0][0..0] == "-"
-              qname = StompHelper::make_destination(default)
-            else
-              qname = StompHelper::make_destination(ARGV[0])
-          end
-        else
-          qname = StompHelper::make_destination(default)
-      end
+      qname = ENV['QNAME'] ? ENV['QNAME'] : StompHelper::make_destination(default)
     end
     #
     def pause(consmsg)
       puts consmsg
       gets
     end
+    #
+    def get_maxmsgs(params = {:default => 10})
+      max_msgs = ENV['MAX_MSGS'] ? ENV['MAX_MSGS'].to_i : params[:default]
+    end
+    #
   end # end of << self
 end # end of StompHelper
 
