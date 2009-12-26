@@ -13,11 +13,14 @@ require 'eventmachine'
 module StompClient
   include EM::Protocols::Stomp
   #
-  def initialize *args
-    super
+  def initialize(*args)
+    super(*args)
+    options = (Hash === args.last) ? args.pop : {}
+    @conn_headers = {:login => "guest", :passcode => "guestpass"}
+    @conn_headers.merge!(options)
+    #
     @log = Logger::new(STDOUT)
     @log.level = Logger::DEBUG
-    @conn_headers = {:login => "guest", :passcode => "guestpass"}
   end
   #
   def post_init
@@ -37,9 +40,6 @@ module StompClient
     end
   end
   #
-  def set_connection_headers(params = {})
-    @conn_headers.merge!(params)
-  end
 end
 #
 EM.run {
@@ -48,10 +48,9 @@ EM.run {
   port = ENV['STOMP_PORT'] ? ENV['STOMP_PORT'] : 51613
   host = ENV['STOMP_HOST'] ? ENV['STOMP_HOST'] : "localhost"
   #
-  conn = EM.connect(host, port, StompClient)
+  conn = EM.connect(host, port, StompClient,
+    :login => "gmallard", :passcode => "bigguy")
   puts "EM.run Connection complete to #{host} on port #{port}"
-  # Override connection parameters.  (Is there another way to do this?)
-  conn.set_connection_headers(:login => "gmallard", :passcode => "bigguy" )
   #
   # Send stomp DISCONNECT frame after 10 seconds.
   #
