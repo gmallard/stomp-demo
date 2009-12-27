@@ -4,14 +4,15 @@
 # == Notes
 #
 #
-# Initial examples are based on the code suplied with the stompserver gem,
-# and with tests from the stomp gem.
+# Initial examples were based on the code suplied with the stompserver gem,
+# and with tests from the stomp gem.  This has been expanded as described
+# subsequently.
 #
 # The default configuration in this project uses a non-default port for the
 # stompserver Ruby gem.  This is because I already have a running instance 
 # of ActiveMQ.  My system is set up as follows:
 #
-# stompserver:: port 51613
+# stompserver:: port => 51613
 # AMQ:: port => 61613
 #
 # === stomp Message Protocol
@@ -25,8 +26,8 @@
 # This project is currently based on:
 #
 # stomp:: gem version 1.1
-# stompserver:: gem version 0.9.9
-# AMQ:: Version 5.2.0
+# stompserver:: gem version 0.9.9 and local modifications for ruby 1.9.x compatability
+# AMQ:: Version 5.2 and/or Version 5.3
 #
 # Client code (the getters and putters) testing has been completed 
 # successfully under:
@@ -35,36 +36,35 @@
 # ruby19:: ruby 1.9.0 (2008-06-20 revision 17482) [i486-linux]
 # ruby191:: ruby 1.9.1p243 (2009-07-16 revision 24175) [i486-linux]
 #
-# During those tests the stompserver continued to run on Ruby 1.8.7.
-#
 # === stompserver Note
 #
-# This code needs to be tested with the stompserver running under Ruby:
+# This code was tested with the stompserver running under Ruby:
 #
 # * 1.9.0
 # * 1.9.1
 #
-# The author suspects there will be problems in these cases, but this
-# should be verified and documented.
+# The standard 0.9.9 stompserver gem using ruby
+# 1.9.x fails.
 #
 # --------
 #
-# An experimental version of server code modified for 1.9.0 and 1.9.1  is 
+# A version of server code modified for 1.9.0 and 1.9.1  is 
 # available by:
 #
 # *	git clone git://github.com/gmallard/stompserver.git
 #
-# Note!: the experimental version also includes modifications to:
+# Note!: the 'master' branch of that repository also includes modifications to:
 #
 # * active record support for MySql
 # * additions for using standard ruby 'logger' style logging
+# * a variety of other enhancements to the stompserver code base
 #
 # To obtain a _minimal_ set of server changes for 1.9.x, see the 'minimal_19x'
-# branch at that location.
+# branch in that repository.
 #
 # === stomp Gem Note
 #
-# No rdoc documentation was produced during the standard install of this
+# No rdoc documentation was produced during the standard install of the 0.9.9
 # gem.  It is not clear why this happened.  I uninstalled the gem, and 
 # reinstalled with the '--rdoc --ri' options, and all was well.
 #
@@ -110,7 +110,7 @@
 #  <!-- The transport connectors ActiveMQ will listen to -->
 #  <transportConnectors>
 #      .....
-#      <transportConnector name="stomp" uri="stomp://localhost:61613"/>
+#   <transportConnector name="stomp" uri="stomp://localhost:61613"/>
 #      .....
 #  </transportConnectors>
 #
@@ -118,8 +118,8 @@
 #
 # The client code in this project has been tested against:
 #
-# stompserver:: Version as described above
-# AMQ:: Version as described above
+# stompserver:: Versions as described above
+# AMQ:: Versions as described above
 #
 # There are no formal unit tests for this project.  Feel free to clone and
 # add them if you care to. :-)
@@ -290,5 +290,23 @@
 #     Get help on the command line options, and exit.
 # --help::
 #     Same as -h.
+#
+# == Environment Parameter Overrides
+#
+# The ability to override:
+#
+# * queue names for putters and getters
+# * putter message counts
+#
+# is provided.  A simple example of using this is:
+#
+# * MAX_MSGS=100 QNAME="/queue/special" ruby basic/queue_put.rb
+#
+# Again, this capability is _not_ provided for in the rake executions of the examples.
+#
+# == Eventmachine Examples
+#
+# Several examples of using the ruby eventmachine gem's stomp support have 
+# been added.
 #
 
