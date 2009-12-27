@@ -55,7 +55,7 @@ module StompSendSubscribeClient
   # receive_msg - override of EM supplied method
   def receive_msg(msg)
     if msg.command == "CONNECTED"
-      @log.debug("#{self} received CONNECTED")
+      @log.debug("#{self} received CONNECTED : #{msg.inspect}")
       @connected = true
     else
       @log.debug("got a message: #{msg.inspect}")

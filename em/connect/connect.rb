@@ -34,9 +34,9 @@ module StompClient
   #
   def receive_msg(msg)
     if msg.command == "CONNECTED"
-      @log.debug("received CONNECTED")
+      @log.debug("received CONNECTED : #{msg.inspect}")
     else
-      @@log.debug("got a message: #{msg.inspect}")
+      @log.debug("got a message: #{msg.inspect}")
     end
   end
   #
