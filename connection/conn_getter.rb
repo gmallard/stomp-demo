@@ -14,7 +14,7 @@ require 'stomphelper'
 #
 $DEBUG = ENV['DEBUG'] ? ENV['DEBUG'] : false
 #
-class SenderReceiver
+class ConectionReceiver
   #
   # Create a new sender/receiver
   #
@@ -62,12 +62,15 @@ class SenderReceiver
       message = @conn.receive
       @@log.debug("Received: #{message}")
       if @ack == "client"
-        @@log.debug("in receive, sending ACK")
-        @conn.ack(message.headers["message-id"])  # ACK the message ID!
+        @@log.debug("in receive, sending ACK, headers: #{message.headers.inspect}")
+        message_id = message.headers["message-id"]
+        @@log.debug("in receive, sending ACK, message-id: #{message_id}")
+        @conn.ack(message_id) # ACK this message
       end
       StompHelper::pause("After first receive") if (msgnum == 0 and $DEBUG)
+      #
+      received = message
     end
-
   end
   #
   # Run a clean disconnect
@@ -89,16 +92,17 @@ class SenderReceiver
   #
   def subscribe
     @conn.subscribe(@queue_name, @headers)
+    @@log.debug("subscribe to: #{@queue_name}")
+    @@log.debug("headers: #{@headers.inspect}")
   end
 end
 #
 qname = StompHelper.get_queue_name("/sendrecv")
 max_msgs = StompHelper.get_maxmsgs()
 #
-csr = SenderReceiver.new(:max_msgs => max_msgs, 
+csr = ConectionReceiver.new(:max_msgs => max_msgs, 
   :queue_name => qname )
 #
-csr.send_messages()
 csr.get_messages()
 csr.shutdown()
 

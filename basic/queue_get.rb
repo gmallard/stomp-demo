@@ -14,6 +14,8 @@ class BasicMessageGetter
   attr_reader :queue_name
   # The client ID used on the server
   attr_reader :client_id
+  # Ack Mode
+  attr_reader :ack
   #
   # Create new message getter.
   #
@@ -29,6 +31,7 @@ class BasicMessageGetter
     @client_id = params[:client_id] ? params[:client_id] : "basic_get_cl01"
     runparms = Runparms.new(params)
     @@log.debug runparms.to_s
+    @ack = runparms.ack ? runparms.ack : "auto"
     #
     @client = Stomp::Client.open(runparms.userid, runparms.password, 
       runparms.host, runparms.port)
@@ -45,7 +48,8 @@ class BasicMessageGetter
     #
     count = 0
     @client.subscribe(@queue_name,
-     {"persistent" => true, "client-id" => @client_id} ) do |message|
+     {"persistent" => true, "client-id" => @client_id,
+        "ack" => @ack} ) do |message|
       @@log.debug "subscribe loop, thread is: #{Thread.current}"
       lmsg = "Got Reply: ID=#{message.headers['message-id']} "
       lmsg += "BODY=#{message.body} "
@@ -53,6 +57,10 @@ class BasicMessageGetter
       @@log.debug "#{lmsg}"
       received = message
       count += 1
+      if @ack == "client"
+        @@log.debug "subscribe loop, sending acknowledge"
+        @client.acknowledge(received)
+      end
     end
     #
     # Make sure this sleep time is sufficiently large, but only as large as
@@ -71,7 +79,7 @@ class BasicMessageGetter
     #
     # This may be able to be controlled using ack => client.
     #
-    sleep 10 until received
+    sleep 3 until received
     #
     @client.close
     @@log.debug "getter client received count: #{count}"

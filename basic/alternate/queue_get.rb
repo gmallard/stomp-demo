@@ -14,6 +14,8 @@ class BasicMessageGetter
   attr_reader :queue_name
   # The client ID used on the server
   attr_reader :client_id
+  # Ack Mode
+  attr_reader :ack
   #
   # Create new message getter.
   #
@@ -29,6 +31,7 @@ class BasicMessageGetter
     @client_id = params[:client_id] ? params[:client_id] : "basic_get_cl01_alt"
     runparms = Runparms.new(params)
     @@log.debug runparms.to_s
+    @ack = runparms.ack ? runparms.ack : "auto"
     #
     @client = Stomp::Client.open(runparms.userid, runparms.password, 
       runparms.host, runparms.port)
@@ -50,7 +53,8 @@ class BasicMessageGetter
 #    work_time = 2.9 # how long the work takes / this works but is like watching paint dry
     receive_end = Time.now
     @client.subscribe(@queue_name,
-     {"persistent" => true, "client-id" => @client_id} ) do |message|
+     {"persistent" => true, "client-id" => @client_id,
+        'ack' => @ack} ) do |message|
       receive_end = Time.now
       @@log.debug "subscribe loop, thread is: #{Thread.current}"
       lmsg = "Got Reply: ID=#{message.headers['message-id']} "
@@ -61,6 +65,10 @@ class BasicMessageGetter
       count += 1
       #      
       procmsg(received, work_time)
+      if @ack == "client"
+        @@log.debug "subscribe loop, sending acknowledge"
+        @client.acknowledge(received)
+      end
     end
     # sleep until:
     # a) we have actually received some work, *AND*

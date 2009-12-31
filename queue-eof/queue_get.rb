@@ -36,7 +36,8 @@ class QEofMessageGetter
     eof_msg_not_received = true
     loop_count = 0
     #
-    headers = {"persistent" => true, "client-id" => @client_id}
+    headers = {"persistent" => true, "client-id" => @client_id,
+      "ack" => @runparms.ack}
     #
     # Do this until the EOF message is received.
     #
@@ -57,19 +58,24 @@ class QEofMessageGetter
           #
           proc_message(message)
           #
+          if @runparms.ack == "client"
+            @@log.debug "subscribe loop, sending acknowledge"
+            client.acknowledge(message)
+          end
+          #
           if message.body == Runparms::EOF_MSG
             @@log.debug "#{self.class} should be done"
             eof_msg_not_received = false
             break
           end
           received = message
-        end
-      @@log.debug "#{self.class} Starting to sleep"
-      sleep 0.1 until received
-      @@log.debug "#{self.class} Ending sleep"
-      client.close()
-      received = nil
-      @@log.debug "#{self.class} getter client loop ending"
+      end # end of subscribe
+    @@log.debug "#{self.class} Starting to sleep"
+    sleep 1.0 until received
+    @@log.debug "#{self.class} Ending sleep, closing client"
+    client.close()
+    received = nil
+    @@log.debug "#{self.class} getter client loop ending"
     end
     @@log.debug "#{self.class} getter client ending"
   end

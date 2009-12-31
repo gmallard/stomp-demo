@@ -12,6 +12,10 @@ class Runparms
   #
   Runparms::EOF_MSG = "__END_OF_WORK__"
   #
+  # The ack mode to use on subscribe
+  #
+  attr_reader :ack
+  #
   # The user ID to connect with.
   #
   attr_reader :userid
@@ -35,6 +39,7 @@ class Runparms
     @@log.level = Logger::DEBUG
     #
     @userid, @password, @host, @port = nil, nil, nil, nil
+    @ack = nil
     #
     # Properties from YAML file first.
     #
@@ -49,6 +54,7 @@ class Runparms
       @password = yaml_parms[:password]
       @host = yaml_parms[:host]
       @port = yaml_parms[:port]
+      @ack = yaml_parms[:ack]
     end
     #
     # Override with CTOR parms if present
@@ -57,12 +63,14 @@ class Runparms
     @password = params[:password] if params[:password]
     @host = params[:host] if params[:host]
     @port = params[:port] if params[:port]
+    @ack = params[:ack] if params[:ack]
     #
     clopts = get_opts()
     @userid = clopts[:userid] if clopts[:userid]
     @password = clopts[:password] if clopts[:password]
     @host = clopts[:host] if clopts[:host]
     @port = clopts[:port] if clopts[:port]
+    @ack = clopts[:ack] if clopts[:ack]
     #
     # Override with hard coded values if still no definition
     #
@@ -70,13 +78,14 @@ class Runparms
     @password = "passcode" if not @password
     @host = "localhost" if not @host
     @port = 51613 if not @port
+    @ack = "auto" if not @ack
     #
   end
   #
   # Return string representation.
   #
   def to_s
-    "Userid=#{@userid}, Password=#{@password}, Host=#{@host}, Port=#{@port}"
+    "Userid=#{@userid}, Password=#{@password}, Host=#{@host}, Port=#{@port}, Ack=#{ack}"
   end
 
   private
@@ -84,6 +93,11 @@ class Runparms
   def get_opts()
     clopts = {}
     parser = OptionParser.new
+
+    # :ack
+    parser.on("-a", "--ack=ackmode", String, 
+      "Ack Mode (Default: auto)") {|am| 
+      clopts[:ack] = am}
 
     # :userid
     parser.on("-u", "--user=LOGINID", String, 
