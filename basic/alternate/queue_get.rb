@@ -47,7 +47,7 @@ class BasicMessageGetter
     # thread, known as the 'callback listener'!.
     #
     count = 0
-    secs_to_sleep = 3 # Choose this carefully depending on how long
+    secs_to_sleep = 15 # Choose this carefully depending on how long
                       # the processing of each message will take
     work_time = 0.050 # how long the work takes / pretty quick here
 #    work_time = 2.9 # how long the work takes / this works but is like watching paint dry
