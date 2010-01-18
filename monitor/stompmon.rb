@@ -32,9 +32,7 @@ class StompMonitor
     @@log.debug("#{self.class} Stomp queue monitor starts.")
     loop_count = 0
     #
-    headers = {"persistent" => true, "client-id" => @client_id}
-    #
-    # Do this until the EOF message is received.
+    headers = {"persistent" => true, "client-id" => "monitor-client"}
     #
     while (true)
       loop_count += 1
