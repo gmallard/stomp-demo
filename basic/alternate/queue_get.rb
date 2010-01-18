@@ -47,15 +47,26 @@ class BasicMessageGetter
     # thread, known as the 'callback listener'!.
     #
     count = 0
-    secs_to_sleep = 15 # Choose this carefully depending on how long
-                      # the processing of each message will take
-    work_time = 0.050 # how long the work takes / pretty quick here
-#    work_time = 2.9 # how long the work takes / this works but is like watching paint dry
-    receive_end = Time.now
+    #
+    # Choose this value carefully.  The value:
+    #
+    # * _must_ exceed the time it will take to receive the first message.
+    # * _must_ exceed the maximum single message processing time
+    #
+    # However, the valus used _should_ be as small as possible!
+    #
+    secs_to_sleep = 5
+    #
+    # How long it takes to process a single message.
+    #
+    message_processing_time = 1.0
+    #
+    #
+    #
+    receive_start = Time.now
     @client.subscribe(@queue_name,
      {"persistent" => true, "client-id" => @client_id,
         'ack' => @ack} ) do |message|
-      receive_end = Time.now
       @@log.debug "subscribe loop, thread is: #{Thread.current}"
       lmsg = "Got Reply: ID=#{message.headers['message-id']} "
       lmsg += "BODY=#{message.body} "
@@ -64,16 +75,16 @@ class BasicMessageGetter
       received = message
       count += 1
       #      
-      procmsg(received, work_time)
+      procmsg(received, message_processing_time)
       if @ack == "client"
         @@log.debug "subscribe loop, sending acknowledge"
         @client.acknowledge(received)
       end
+      receive_start = Time.now
     end
     # sleep until:
-    # a) we have actually received some work, *AND*
-    # b) we have actually processed each message (timing dependency here)
-    sleep 0.1 until received && ((Time.now.to_i - receive_end.to_i) > secs_to_sleep)
+    # a) a maximum specfied wait time after the last receive is exceeded
+    sleep 0.5 until ((Time.now.to_i - receive_start.to_i) > secs_to_sleep)
     #
     @client.close
     @@log.debug "getter client received count: #{count}"
@@ -82,8 +93,8 @@ class BasicMessageGetter
   #
   # Simulate real work processing each message
   #
-  def procmsg(message, work_time)
-    sleep work_time # long running work
+  def procmsg(message, message_processing_time)
+    sleep message_processing_time # long running work
   end
 end
 #
