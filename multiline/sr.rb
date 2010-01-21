@@ -44,8 +44,8 @@ messages = [
 ]
 #
 
-host = "localhost"
-# host = "oldpete"
+# host = "localhost"
+host = "oldpete"
 
 port = 51613
 # port = 61613
