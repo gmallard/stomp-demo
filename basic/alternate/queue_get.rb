@@ -59,7 +59,7 @@ class BasicMessageGetter
     #
     # How long it takes to process a single message.
     #
-    message_processing_time = 1.0
+    message_processing_time = 0.01
     #
     #
     #
