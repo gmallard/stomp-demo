@@ -6,6 +6,7 @@
 # * A putter knows how many getters (n) will be processing messages
 # * The putter evenly distributes messages across (n) queues 
 # * (n) getter threads are started, and process messages
+# * getter threads may be started before the putter runs
 #
 require 'rubygems'
 require 'stomp'
@@ -29,7 +30,7 @@ class ThreadedGetters
     @max_getters = params[:max_getters] ? 
       params[:max_getters] : 3 - 1
     @max_wke = params[:max_wke] ? 
-      params[:max_wke] : 10 - 1
+      params[:max_wke] : 100 - 1
     #
     @getters = nil
     @runparms = Runparms.new
@@ -53,6 +54,7 @@ class ThreadedGetters
         lmsg += "client #{client_name}, "
         lmsg += "name #{name}"
         @@log.debug "#{lmsg}"
+      	lcount = 0
         client.subscribe(queue_name(getter_num), {
                         "persistent" => true,
                         "client-id" => client_name,
@@ -62,12 +64,14 @@ class ThreadedGetters
           lmsg += "on QUEUE #{message.headers['destination']}"
           @@log.debug "#{lmsg}"
           proc_message(message)
+      	  lcount += 1
           received = message
           Thread::pass()
         end
-        sleep 0.5 until received
+        sleep 30 until received
+#        sleep until received
         client.close
-        @@log.debug "getter #{name} ending"
+        @@log.debug "getter #{name} ending, count #{lcount}"
       end
     end
   end
@@ -105,6 +109,7 @@ class ThreadedGetters
   private
   def proc_message(message)
     @@log.debug "Processing: #{message.body}"
+    sleep rand(0.1)
   end
   #
   # Convenience method for obtaining a queue name.
@@ -116,8 +121,16 @@ end
 #
 threader = ThreadedGetters.new()
 puts "Starting putter"
-threader.run_putter()
+#
+# The order in which getters/putters only matters in terms of
+# performance.
+#
+# threader.run_putter()
+# threader.start_getters()
+#
 threader.start_getters()
+threader.run_putter()
+#
 puts "Starting getter wait"
 threader.getters.each {|th| th.join}
 puts "Complete"
