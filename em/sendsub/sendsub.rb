@@ -2,6 +2,8 @@ require 'logger'
 #
 require 'rubygems'
 require 'eventmachine'
+$:.unshift File.join(File.dirname(__FILE__), "..", "..", "lib")
+require 'runparms'
 #
 # = StompSendSubscribeClient
 #
@@ -191,8 +193,9 @@ end
 EM.run {
   @log.debug "EM.run starts"
   #
-  port = ENV['STOMP_PORT'] ? ENV['STOMP_PORT'] : 51613
-  host = ENV['STOMP_HOST'] ? ENV['STOMP_HOST'] : "localhost"
+  runparms = Runparms.new
+  port = runparms.port
+  host = runparms.host
   #
   conn = EM.connect(host, port, StompSendSubscribeClient,
     :login => "gmallard", :passcode => "bigguy")
