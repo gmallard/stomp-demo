@@ -1,36 +1,42 @@
 require 'rubygems'
 require 'stomp'
+require 'logger'
+$:.unshift File.join(File.dirname(__FILE__), "..", "lib")
+require 'runparms'
+require 'stomphelper'
+@log = Logger.new(STDOUT)
+@log.level = Logger::DEBUG
 # ---------------
 def runtest(message, host, port)
   conn = Stomp::Connection.open("login", "password", 
     host, port)
-  puts "Connected"
+  @log.debug "Connected"
 
-  puts "Length: #{message.size}"
+  @log.debug "Length: #{message.size}"
   p [ message ]
   conn.send "/queue/multilend", message
   #
   conn.disconnect
-  puts "Disconnected"
+  @log.debug "Disconnected"
   #
   conn = Stomp::Connection.open("login", "password", 
     host, port)
-  puts "Connected again"
+  @log.debug "Connected again"
   #
   conn.subscribe "/queue/multilend", {}
-  puts "Subscribe done"
+  @log.debug "Subscribe done"
   #
-  puts "Starting receive"
+  @log.debug "Starting receive"
   received = conn.receive
   p [ received ]
   p [ received.body ]
-  puts "Size: #{received.body.size}"
-  puts "Ending receive"
+  @log.debug "Size: #{received.body.size}"
+  @log.debug "Ending receive"
   raise "Boom" unless received.body == message
   raise "Wham" unless received.body.size == message.size
   #
   conn.disconnect
-  puts "Disconnected again"
+  @log.debug "Disconnected again"
 end
 
 #
@@ -43,12 +49,9 @@ messages = [
   "Queue: /queue/testbasic\ndequeued: 0\nsize: 1\nexceptions: 0\nenqueued: 1\n\n",
 ]
 #
-
-# host = "localhost"
-host = "oldpete"
-
-port = 51613
-# port = 61613
+runparms = Runparms.new
+host = runparms.host
+port = runparms.port
 #
 for message in messages do
   runtest(message, host, port)
