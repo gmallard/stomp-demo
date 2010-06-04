@@ -43,17 +43,17 @@ class BasicMessageGetter
     @@log.debug "getter client starting, thread is: #{Thread.current}"
     received = nil
     #
-    # Note: in the subscribe loop there is actually a separate
-    # thread, known as the 'callback listener'!.
+    # Note: in the subscribe loop there is a separate
+    # thread: the 'callback listener'!.
     #
     count = 0
     #
-    # Choose this value carefully.  The value:
+    # Choose this value carefully.  The value _must_ exceed:
     #
-    # * _must_ exceed the time it will take to receive the first message.
-    # * _must_ exceed the maximum single message processing time
+    # * the time it will take to receive the first message.
+    # * the maximum single message processing time
     #
-    # However, the valus used _should_ be as small as possible!
+    # However, the value used _should_ be as small as possible!
     #
     secs_to_sleep = 5
     #

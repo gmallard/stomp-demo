@@ -65,7 +65,7 @@ class BasicMessageGetter
     #
     # Make sure this sleep time is sufficiently large, but only as large as
     # really required!  There must be sufficient time for:
-    # 1) The stompserver to dequeue all the messages in the queue
+    # 1) The stomp server to dequeue all the messages in the queue
     # 2) The stomp server will then transmit these messages
     # 3) The consumer/getter (this code) then processes the messages received.
     #
@@ -77,7 +77,7 @@ class BasicMessageGetter
     # appears to me that AMQ enqueues, and dequeues messages much more quickly,
     # which covers this up in many cases.
     #
-    # This may be able to be controlled using ack => client.
+    # Later note:  The above paragraph may not be correct.  Caution advised.
     #
     sleep 3 until received
     #
