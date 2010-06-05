@@ -9,15 +9,18 @@ class Volparams
   #
   def initialize
     @params = defaults()
+    optparms = get_opts
     #
-    yfname = File.join(File.dirname(__FILE__), "volparams.yaml")
+    yfname = @params[:config]
+    yfname = optparms[:config] if optparms[:config]
+    yfname = File.join(File.dirname(__FILE__), yfname)
     yamlparms = {}
     if File.exists?(yfname)
       yamlparms = YAML.load(File.open(yfname))
       @params.merge!(yamlparms) if yamlparms
     end
     #
-    @params.merge!(get_opts())
+    @params.merge!(optparms)
   end
 
   private
@@ -26,6 +29,12 @@ class Volparams
     clopts = {}
     parser = OptionParser.new
     #
+
+    # :config
+    parser.on("-C", "--config=volparams.yaml", String, 
+      "YAML Configuration File (Default: volparams.yaml)") {|x| 
+      clopts[:config] = x
+    }
 
     # :min_tests
     parser.on("-t", "--min_tests=mintests", Integer, 
@@ -98,6 +107,8 @@ class Volparams
     #
     params[:host] = 'localhost'
     params[:port] = 51613
+    #
+    params[:config] = 'volparams.yaml'
     params
   end
 end
