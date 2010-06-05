@@ -1,0 +1,10 @@
+--- 
+:min_tests: 1
+:max_tests: 1
+:min_concli: 1
+:max_concli: 1
+:min_msgs: 1
+:max_msgs: 1
+:host: localhost
+:port: 51613
+
