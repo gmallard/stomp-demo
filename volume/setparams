@@ -1,0 +1,15 @@
+#
+W="--min_tests=1"
+W="$W --max_tests=1"
+#
+W="$W --min_concli=1"
+W="$W --max_concli=1"
+#
+W="$W --min_msgs=1"
+W="$W --max_msgs=1"
+#
+export PARAMS=$W
+#
+export SCINC="-I $HOME/hext/stomp-repos/gmallards-stomp-mainline/lib"
+#
+
