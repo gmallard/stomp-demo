@@ -30,10 +30,17 @@ class Test
   #
   def start_runners
     @log.debug("Test instance #{@test_num} start_runners starts")
+    curconn = curcli = 0
     @runners = (1..@num_runners).map do |rn|
       Thread.new(@test_num, rn, @params) do |t_num, cc_num, cocl_params|
-        cocl = Connection::new(t_num, cc_num, cocl_params)
-        # cocl = Client::new(t_num, cc_num, cocl_params)
+        cocl = nil
+        if rn % 2 != 0
+          curconn += 1
+          cocl = Connection::new(t_num, curconn, cocl_params)
+        else
+          curcli += 1
+          cocl = Client::new(t_num, curcli, cocl_params)
+        end
         cocl.testcocl
       end
     end
