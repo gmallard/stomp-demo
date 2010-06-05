@@ -31,6 +31,7 @@ class Connection
     @log.debug("#{@me} - qname: #{@qname}")
     #
     putmsgs
+    sleep rand(5)*rand
     getmsgs
     #
     @conn.disconnect()
@@ -43,6 +44,7 @@ class Connection
       msg = "#{mnum} of #{@num_msgs}"
       @conn.publish(@qname, msg)
       @log.debug("#{@me} published #{msg}")
+      sleep rand(3)*rand
     end
   end
   #
@@ -51,6 +53,7 @@ class Connection
     1.upto(@num_msgs) do |mnum|
       msg = @conn.receive
       @log.debug("#{@me} received #{msg.body}")
+      sleep rand(3)*rand
     end
   end
 end

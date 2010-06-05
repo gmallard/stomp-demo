@@ -30,6 +30,7 @@ class Client
     @log.debug("#{@me} - qname: #{@qname}")
     #
     putmsgs
+    sleep rand(5)*rand
     getmsgs
     #
     @stcli.close
@@ -42,6 +43,7 @@ class Client
       msg = "#{mnum} of #{@num_msgs}"
       @stcli.publish(@qname, msg)
       @log.debug("#{@me} published #{msg}")
+      sleep rand(3)*rand
     end
   end
   #
@@ -50,6 +52,7 @@ class Client
     @stcli.subscribe(@qname) do |msg|
       @log.debug("#{@me} received #{msg.body}")
       count += 1
+      sleep rand(3)*rand
     end
     #
     sleep 0.1 until count == @num_msgs

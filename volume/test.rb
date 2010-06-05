@@ -30,15 +30,19 @@ class Test
   #
   def start_runners
     @log.debug("Test instance #{@test_num} start_runners starts")
-    curconn = curcli = 0
+    curconn = curcli = lcr = 0
     @runners = (1..@num_runners).map do |rn|
+      lcr += 1
+      sleep rand(lcr)
       Thread.new(@test_num, rn, @params) do |t_num, cc_num, cocl_params|
         cocl = nil
         if rn % 2 != 0
           curconn += 1
+          Thread.current["tid"] = "T#{t_num}_#{curconn}_con"
           cocl = Connection::new(t_num, curconn, cocl_params)
         else
           curcli += 1
+          Thread.current["tid"] = "T#{t_num}_#{curcli}_cli"
           cocl = Client::new(t_num, curcli, cocl_params)
         end
         cocl.testcocl
@@ -49,7 +53,14 @@ class Test
   #
   def join_runners
     @log.debug("Test instance #{@test_num} join_runners starts")
-    @runners.each {|th| th.join}
+    @runners.each {|th|
+      begin
+        th.join
+        @log.debug("Test join complete: #{th['tid']}")
+      rescue RuntimeError => e
+        @log.debug("Test join ERROR: #{th['tid']} - #{e.message}")
+      end
+    }
     @log.debug("Test instance #{@test_num} join_runners ends")
   end
 end

@@ -69,8 +69,12 @@ class Driver
   def run
     @@log.debug("driver run starts")
     @@log.debug("volparams: #{@volparams.inspect}")
+    ltn = 0
     @tests = (@volparams[:min_tests]..@volparams[:max_tests]).map do |tn|
+      ltn += 1
+      sleep rand(ltn)
       Thread.new(tn, @volparams) do |test_num, test_params|
+        Thread.current["tid"] = "TT_#{test_num}"
         @@log.debug("Test Thread #{test_num} starts")
         test_instance = Test.new(test_num, test_params)
         test_instance.runtests
@@ -82,7 +86,14 @@ class Driver
   #
   def joins
     @@log.debug("driver joins starts")
-    @tests.each {|th| th.join}
+    @tests.each {|th| 
+      begin
+        th.join
+        @@log.debug("Drive join complete for: #{th['tid']}")
+      rescue RuntimeError => e
+        @@log.debug("Drive join ERROR: #{th['tid']} - #{e.message}")
+      end
+    }
     @@log.debug("driver joins ends")
   end
 end
