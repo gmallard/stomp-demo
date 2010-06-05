@@ -4,4 +4,5 @@
 *.log
 doc
 html
+temp*
 
