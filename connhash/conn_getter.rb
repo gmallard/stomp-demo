@@ -7,6 +7,16 @@ login_hash = {
 	:hosts => [ {:login => "login", :passcode => "passcode", 
 							:host => "localhost", :port => 51613}
 	],
+      :initial_reconnect_delay => 0.01,
+      :max_reconnect_delay => 30.0,
+      :use_exponential_back_off => true,
+      :back_off_multiplier => 2,
+      :max_reconnect_attempts => 10,
+      :randomize => false,
+      :backup => false,
+      :timeout => -1,
+      :connect_headers => {},
+      :parse_timeout => 5,
 }
 #  :parse_timeout => 30
 #
@@ -25,13 +35,22 @@ puts "Message: #{message}"
 p [ message.body ]
 
 #
-# puts "Receiving Second ......"
-# message2 = conn.receive
-# puts "Message: #{message2}"
+puts "Starting sleep"
+sleep 30
+puts "Receiving Second ......"
+message2 = conn.receive
+puts "Message: #{message2}"
+
+puts "Starting sleep"
+sleep 30
+puts "Receiving 3rd ......"
+message3 = conn.receive
+puts "Message: #{message3}"
 
 puts "Unsubscribing ...."
 conn.unsubscribe queue_name
 puts "Unsubscribe complete ...."
+puts "Starting sleep"
 sleep 30
 
 puts "Disconnecting ..."
