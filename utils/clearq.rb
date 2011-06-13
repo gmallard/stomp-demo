@@ -59,7 +59,7 @@ class QueueClearer
       @@log.debug "#{lmsg}"
       received = message
     end
-    sleep 0.1 until received
+    sleep 2.0 until received
     @client.close
     @@log.debug "clearer client ending, thread is: #{Thread.current}"
   end
