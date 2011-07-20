@@ -2,6 +2,10 @@ require 'rubygems'
 require 'stomp'
 # require 'logger'
 $:.unshift File.join(File.dirname(__FILE__), "..", "lib")
+$:.unshift File.join(File.dirname(__FILE__))
+#
+require 'slogger'
+slogger = Slogger.new
 #
 login_hash = {
 	:hosts => [ {:login => "login", :passcode => "passcode", 
@@ -17,6 +21,7 @@ login_hash = {
       :timeout => -1,
       :connect_headers => {},
       :parse_timeout => 5,
+      :logger => slogger,
 }
 #  :parse_timeout => 30
 #
