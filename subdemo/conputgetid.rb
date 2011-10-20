@@ -2,9 +2,9 @@ require 'rubygems'
 require 'stomp'
 #
 puts "starting"
-port = 61613  # AMQ
+# port = 61613  # AMQ
 # port = 62613  # Apollo
-# port = 51613    # Forked stompserver
+port = 51613    # Forked stompserver
 conn = Stomp::Connection.open('loginid', 'password', 'localhost', port)
 puts "connection complete: #{conn.inspect}"
 #
