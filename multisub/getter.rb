@@ -9,7 +9,6 @@ cli = Stomp::Client.open('loginid', 'password', 'localhost', ARGV[0].to_i)
 puts "connection complete"
 #
 queue_name = "/queue/mtsubtext"
-max_sleep = 5
 #
 idlist = [ "dummy", "smt01", "smt02"] # size matches num_queues
 idcounts = [ -1, 0, 0]
