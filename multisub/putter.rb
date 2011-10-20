@@ -10,12 +10,16 @@ puts "connection complete"
 #
 queue_name = "/queue/mtsubtext"
 msg_to_send = "The answer is 42. And then some"
-max_msgs = 12
+max_msgs_per_queue = 2
+num_queues = 2
 #
-1.upto(max_msgs) do |i|
-  omsg = msg_to_send + " #{i.to_s} / #{max_msgs}"
-  cli.publish(queue_name, omsg)
-  puts omsg
+1.upto(num_queues) do |q|
+	1.upto(max_msgs_per_queue) do |i|
+		pqn = queue_name + "-" + q.to_s
+		omsg = msg_to_send + " #{pqn} / #{i.to_s} / #{max_msgs_per_queue} / "
+		cli.publish(pqn, omsg)
+		puts omsg
+	end
 end
 #
 cli.close

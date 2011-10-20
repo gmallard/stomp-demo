@@ -11,41 +11,35 @@ puts "connection complete"
 queue_name = "/queue/mtsubtext"
 max_sleep = 5
 #
-idlist = [ "smt01", "smt02", "smt03" ]
-idcounts = [ 0, 0, 0 ]
+idlist = [ "dummy", "smt01", "smt02"] # size matches num_queues
+idcounts = [ -1, 0, 0]
 tot_count = 0
-max_msgs = 12
+num_queues = 2
+max_msgs_per_queue = 2
 #
-0.upto(idlist.size-1) do |i|
-#  cli.subscribe(queue_name, { :id => idlist[i] } ) {|m|
-  cli.subscribe(queue_name, { 'id' => idlist[i] } ) {|m|
+1.upto(idlist.size-1) do |q|
+	qn = queue_name + "-" + q.to_s
+	sn = idlist[q]
+	# note that the subscribes are all handled on the same thread,
+	# and therefore single threaded
+  cli.subscribe(qn, { 'id' => sn } ) {|m|
+		p [ Thread.current ]
     message = m
-		mid = message.headers['subscription']
-		midx = idlist.index(mid)
-    idcounts[midx] += 1
-    pname = "proc-#{mid}"
-    puts "#{pname} #{Thread.current}"
-    puts "#{pname} #{message.body}, count is: #{idcounts[midx]}"
-    to_sleep = rand * max_sleep
-    puts "#{pname} work time #{to_sleep}"
-    sleep to_sleep
-    # No need for a lock here, beause all subscribe procs are called
-    # in sequential manner from the same thread (Stomp's 'listener
-    # thread').
-    tot_count += 1
+		raise "huh?" if m.headers["subscription"] != sn
+		idcounts[q] += 1
+		tot_count += 1
   }
 end
 #
 puts "Starting wait ...."
-sleep 1 until tot_count == max_msgs
+sleep 1 until tot_count == num_queues * max_msgs_per_queue
 puts "Ending wait ...."
 #
 cli.close
 #
-0.upto(idlist.size-1) do |i|
-  puts "For #{idlist[i]} the count is: #{idcounts[i]}"
+1.upto(idlist.size-1) do |n|
+	puts "#{idlist[n]} : #{idcounts[n]}"
 end
-puts "Total count: #{tot_count}"
 #
 puts "done"
 
