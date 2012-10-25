@@ -98,7 +98,7 @@ class ThreadedGetters
           "reply-to" => run_queue_name,
         }
       #
-       client.send(run_queue_name, message, headers )
+       client.publish(run_queue_name, message, headers )
     end
     @@log.debug "#{self.class} ending puts"
     client.close
