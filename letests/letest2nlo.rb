@@ -12,52 +12,52 @@ connect =  "CONNECT\n" +
     "\n" +
     "\x00"
 
-sessdata_01 = "SEND\r\n" +
-    "content-type:text/plain; charset=UTF-8\r\n" +
-    "destination:/queue/test.ruby.stomp.test_nack11p_0010\r\n" +
-    "content-length:40\r\n" +
-    "\r\n" +
+sessdata_01 = "SEND\n" +
+    "content-type:text/plain; charset=UTF-8\n" +
+    "destination:/queue/test.ruby.stomp.test_nack11p_0010\n" +
+    "content-length:40\n" +
+    "\n" +
     "1234567890123456789012345678901234567890" +
     "\x00" +
-    "SUBSCRIBE\r\n" +
+    "SUBSCRIBE\n" +
     "\x00" +
-    "content-type:text/plain; charset=UTF-8\r\n" +
-    "destination:/queue/test.ruby.stomp.test_nack11p_0010\r\n" +
-    "id:f6458d43-c111-4465-92e664898837e177\r\n" +
-    "content-length:0\r\n" +
-    "ack:client\r\n" +
-    "\r\n" +
+    "content-type:text/plain; charset=UTF-8\n" +
+    "destination:/queue/test.ruby.stomp.test_nack11p_0010\n" +
+    "id:f6458d43-c111-4465-92e664898837e177\n" +
+    "content-length:0\n" +
+    "ack:client\n" +
+    "\n" +
     "\x00"
 
-nackp1 = "NACK\r\n" +
-    "content-type:text/plain; charset=UTF-8\r\n" +
-    "id:2\r\n" +
-    "content-length:0\r\n"
+nackp1 = "NACK\n" +
+    "content-type:text/plain; charset=UTF-8\n" +
+    "id:2\n" +
+    "content-length:0\n"
 
-nackp2 =  "\r\n" +
+nackp2 =  "\n" +
     "\x00"
 
-unsubscribe = "UNSUBSCRIBE\r\n" +
-    "content-type:text/plain; charset=UTF-8\r\n" +
-    "destination:/queue/test.ruby.stomp.test_nack11p_0010\r\n" +
-    "id:f6458d43-c111-4465-92e664898837e177\r\n" +
-    "content-length:0\r\n" +
-    "\r\n" +
+unsubscribe = "UNSUBSCRIBE\n" +
+    "content-type:text/plain; charset=UTF-8\n" +
+    "destination:/queue/test.ruby.stomp.test_nack11p_0010\n" +
+    "id:f6458d43-c111-4465-92e664898837e177\n" +
+    "content-length:0\n" +
+    "\n" +
     "\x00"
 
-subscribe = "SUBSCRIBE\r\n" +
-    "content-type:text/plain; charset=UTF-8\r\n" +
-    "destination:/queue/test.ruby.stomp.test_nack11p_0010\r\n" +
-    "id:eb56e791-8ed0-4792-b8122a77a9aa6bf3\r\n" +
-    "content-length:0\r\n" +
-    "ack:auto\r\n" +
-    "\r\n" +
+subscribe = "SUBSCRIBE\n" +
+    "content-type:text/plain; charset=UTF-8\n" +
+    "destination:/queue/test.ruby.stomp.test_nack11p_0010\n" +
+    "id:eb56e791-8ed0-4792-b8122a77a9aa6bf3\n" +
+    "content-length:0\n" +
+    "ack:auto\n" +
+    "\n" +
     "\x00"
 
-disconnect = "DISCONNECT\r\n" +
-    "content-type:text/plain; charset=UTF-8\r\n" +
-    "content-length:0\r\n" +
-    "\r\n" +
+disconnect = "DISCONNECT\n" +
+    "content-type:text/plain; charset=UTF-8\n" +
+    "content-length:0\n" +
+    "\n" +
     "\x00"
 
 
@@ -69,7 +69,7 @@ if part1 || both
   # Session / Connection 1
   # Apollo, from: apache-apollo-99-trunk-20120929.031419-121-unix-distro.tar.gz
   sock = TCPSocket.new "localhost", 62613 # Apollo 
-  # Connect - does not use \r\n because in general we can not know yet whether
+  # Connect - does not use \n because in general we can not know yet whether
   # the broker is a real 1.2 broker.
   puts "Connect 1"
   sock.write(connect) # CONNECT
@@ -83,23 +83,20 @@ if part1 || both
   p [ "msg", msg ]
   ack = msg.match /ack:(.*)\n/
   # puts $1
-  so = "ack:" + $1 + "\r\n"
+  so = "ack:" + $1 + "\n"
   # p [ "so", so ]
   puts "Send NACK"
-	p [ "nack", nackp1 + so + nackp2 ] 
   sock.write(nackp1 + so + nackp2) # NACK
   puts "Send UNSUBSCRIBE"
-	p [ "unsubscribe", unsubscribe ]
   sock.write(unsubscribe) # UNSUBSCRIBE
   puts "Disconnect 1"
-	p [ "disconnect", disconnect ]
   sock.write(disconnect) # DISCONNECT
   sock.close
 end
 
 if part2 || both
   # Session / Connection 2
-  # Connect - does not use \r\n because in general we can not know yet whether
+  # Connect - does not use \n because in general we can not know yet whether
   # the broker is a real 1.2 broker.
   sock = TCPSocket.new "localhost", 62613 # Apollo 
   puts "Connect 2"
@@ -107,7 +104,6 @@ if part2 || both
   # Read CONNECTED
   msg = sock.readline("\0") # The CONNECTED message.  Drop it.
   puts "Subscribe 2"
-	p [ "subscribe", subscribe ]
   sock.write(subscribe) # SUBSCRIBE
   # After the write of the SUBSCRIBE, apollo.log contains, e.g.:
   # 2012-10-26 12:25:07,258 | WARN  | java.io.IOException: Unable to parse header line [\u0013] | org.apache.activemq.apollo.broker.Broker | hawtdispatch-DEFAULT-1
@@ -115,7 +111,6 @@ if part2 || both
   msg2 = sock.readline("\0")
   p [ "msg2", msg2 ]
   puts "Disconnect 2"
-	p [ "disconnect", disconnect ]
   sock.write(disconnect) # DISCONNECT
   sock.close
 end

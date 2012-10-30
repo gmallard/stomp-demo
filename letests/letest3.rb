@@ -32,15 +32,18 @@ puts "Connect 1"
 sock.write(connect12) # CONNECT
 # Read CONNECTED
 msg = sock.readline("\0") # The CONNECTED frame.  Drop it.
+p [ "connected:", msg ]
 puts "Send 1"
 sock.write(send) # SEND
 # Read RECEIPT
 puts "Read RECEIPT"
 msg = sock.readline("\0") # The RECEIPT frame.  Drop it.
+p [ "receipt:", msg ]
 puts "Subscribe 1"
 sock.write(subscribe) # SUBSCRIBE
-puts "Read MESSAGE"
+puts "Read MESSAGE  ... (hang?)"
 msg = sock.readline("\0") # Should get the MESSAGE frame, but .......
+p [ "message:", msg ]
 #
 puts "Well, well ....."
 sock.close
