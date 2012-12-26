@@ -1,9 +1,16 @@
-require 'rubygems'
+require 'rubygems' if RUBY_VERSION =~ /1\.8/
 require 'stomp'
 require 'logger'
-$:.unshift File.join(File.dirname(__FILE__), "..", "lib")
-require 'runparms'
-require 'stomphelper'
+
+if Kernel.respond_to?(:require_relative)
+  require_relative '../lib/runparms'
+  require_relative '../lib/stomphelper'
+else
+  $:.unshift File.join(File.dirname(__FILE__), "..", "lib")
+  require 'runparms'
+  require 'stomphelper'
+end
+
 #
 # = Connection Sender and Receiver
 #
@@ -42,7 +49,7 @@ class SenderReceiver
   #
   # Send messages using a connection.
   #
-  def send_messages()
+  def publish_messages()
     @@log.debug("send_messages starts")
     for msgnum in (0..@max_msgs-1) do
       next_msg = "Message number: #{msgnum+1}"

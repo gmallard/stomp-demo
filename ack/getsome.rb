@@ -1,9 +1,16 @@
-require 'rubygems'
+require 'rubygems' if RUBY_VERSION =~ /1\.8/
 require 'stomp'
 require 'logger'
-$:.unshift File.join(File.dirname(__FILE__), "..", "lib")
-require 'runparms'
-require 'stomphelper'
+
+if Kernel.respond_to?(:require_relative)
+  require_relative '../lib/runparms'
+  require_relative '../lib/stomphelper'
+else
+  $:.unshift File.join(File.dirname(__FILE__), "..", "lib")
+  require 'runparms'
+  require 'stomphelper'
+end
+
 #
 puts "start"
 params = {}
@@ -27,15 +34,8 @@ while true
   case msg.body
     when "msg01"
       puts "got 01"
-			# Behavior:
-			# a) stompserver_ng: will 'hang', i.e. 'msg02' is never sent untl
-			# an 'ack' is received for 'msg01'
-			# b) ActiveMQ: Sends all three messages.  I can see the inbound 
-			# single ACK in the AMQ logs.However the AMQ Web Console indicates:
-			# - 2 messages dequeued
-			# - 1 message pending (number 3)
-			# c) stompserver (ruby 0.9.9): behaves like stompserver_ng if no ack is
-			# sent, but raises an exception if acks are sent :-).
+			# Behavior: will vary depending on server implementation.
+      # YMMV.
 			#----------------------------------------------------
       conn.ack(msg.headers["message-id"])
     when "msg02"

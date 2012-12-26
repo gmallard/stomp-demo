@@ -2,13 +2,18 @@
 #
 # = Nosubnorec
 #
-require 'rubygems'
+require 'rubygems' if RUBY_VERSION =~ /1\.8/
 require 'stomp'
 require 'thread'
 require 'logger'
-$:.unshift File.join(File.dirname(__FILE__), "..", "lib")
-require 'runparms'
-require 'stomphelper'
+
+if Kernel.respond_to?(:require_relative)
+  require_relative '../lib/runparms'
+else
+  $:.unshift File.join(File.dirname(__FILE__), "..", "lib")
+  require 'runparms'
+end
+
 #
 log = Logger.new(STDOUT)
 log.level = Logger::DEBUG
@@ -21,9 +26,10 @@ conn = Stomp::Connection.open(runparms.userid, runparms.password,
 #
 log.debug("Connection is: #{conn.inspect}")
 #
-# Demonstrate that 'subscribe' _must_ me called for a connection in order
+# Demonstrate that 'subscribe' _must_ be called for a connection in order
 # to ever receive any messages.
 #
+rc = 0
 Thread.new(conn) do |amq|
     log.debug "Receiver: #{Thread.current}"
     while true
@@ -32,6 +38,7 @@ Thread.new(conn) do |amq|
         dest = msg.headers["destination"]
         time = Time.now.strftime('%H:%M:%S')
         log.debug "#{time}:#{dest} > #{msg.body.chomp}"
+        rc += 1
     end
 end
 #
@@ -40,10 +47,11 @@ end
 #
 log.debug("Sending to /topic/thread.test")
 conn.publish("/topic/thread.test", Time.now.to_s)
-log.debug("Sleeping 1 second")
+log.debug("Sleeping 2 seconds")
 #
 # Main thread will complete, and the process will end.  A message
 # will never be received becuase no 'subscribe' has been issued.
 #
-sleep 1
+sleep 2
+log.debug("Receive Count: #{rc}")
 

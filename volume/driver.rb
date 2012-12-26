@@ -10,15 +10,17 @@
 # * The Ruby stomp client
 # * The stomp broker used
 #
-# require 'rubygems'
-# require 'stomp'
 require 'logger'
-$:.unshift File.join(File.dirname(__FILE__))
-#
-#
-#
-require 'volparams'
-require 'test'
+
+if Kernel.respond_to?(:require_relative)
+  require_relative 'volparams'
+  require_relative 'test'
+else
+  $:.unshift File.join(File.dirname(__FILE__))
+  require 'volparams'
+  require 'test'
+end
+
 #
 # --------------------------------------------------------------------
 #
@@ -67,31 +69,32 @@ class Driver
   end
   #
   def run
-    @@log.debug("driver run starts")
+    @@log.debug("driver run method starts")
     @@log.debug("volparams: #{@volparams.inspect}")
     ltn = 0
     @tests = (@volparams[:min_tests]..@volparams[:max_tests]).map do |tn|
       ltn += 1
       sleep rand(ltn)
       Thread.new(tn, @volparams) do |test_num, test_params|
-        Thread.current["tid"] = "TT_#{test_num}"
-        @@log.debug("Test Thread #{test_num} starts")
+        ln = "DRVT_#{test_num}"
+        Thread.current["tid"] = ln
+        @@log.debug("Test Thread #{ln} starts")
         test_instance = Test.new(test_num, test_params)
         test_instance.runtests
-        @@log.debug("Test Thread #{test_num} ends")
+        @@log.debug("Test Thread #{ln} ends")
       end
     end
-    @@log.debug("driver run ends")
+    @@log.debug("driver run method ends")
   end
   #
   def joins
-    @@log.debug("driver joins starts")
+    @@log.debug("driver joins starts: #{@tests.size}")
     @tests.each {|th| 
       begin
         th.join
-        @@log.debug("Drive join complete for: #{th['tid']}")
+        @@log.debug("driver join complete for: #{th['tid']}")
       rescue RuntimeError => e
-        @@log.debug("Drive join ERROR: #{th['tid']} - #{e.message}")
+        @@log.debug("driver join ERROR: #{th['tid']} - #{e.message}")
       end
     }
     @@log.debug("driver joins ends")

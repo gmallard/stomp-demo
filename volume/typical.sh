@@ -1,6 +1,9 @@
 #!/bin/sh
 #
 set -x
-ruby volume/driver.rb -t 5 -u 5 -c 7 -d 7 -m 20 -n 20
+# YMMV on 'typical'
+ruby ./driver.rb --min_tests=5 --max_tests=8 \
+  --min_concli=1 --max_concli=3 \
+  --min_msgs=10 --max_msgs=10
 set +x
 

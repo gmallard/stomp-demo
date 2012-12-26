@@ -12,130 +12,39 @@
 # stompserver Ruby gem.  This is because I already have a running instance 
 # of ActiveMQ.  My system is set up as follows:
 #
-# stompserver:: port => 51613
+# stompserver_ng:: port => 51613
 # AMQ:: port => 61613
+# Apollo:: port => 62613
+# Hornet:: port => 41613
 #
 # === stomp Message Protocol
 #
 # Documentation of the stomp message protocol can be found here:
 #
-# * http://stomp.codehaus.org/Specification
+# * http://stomp.github.com/
 #
 # == Software Versions
 #
-# This project is currently based on:
+# This project's code should function with a variety of versions of:
 #
-# stomp:: gem version 1.1
-# stompserver:: gem version 0.9.9 and local modifications for ruby 1.9.x compatability
-# AMQ:: Version 5.2 and/or Version 5.3
+# * The ruby stomp gem
+# * Ruby versions
+# * Servers of various versions
 #
-# Client code (the getters and putters) testing has been completed 
-# successfully under:
+# Note: currently all examples use the STOMP 1.0 protocol level by default.
 #
-# ruby18:: ruby 1.8.7 (2008-08-11 patchlevel 72) [i486-linux]
-# ruby19:: ruby 1.9.0 (2008-06-20 revision 17482) [i486-linux]
-# ruby191:: ruby 1.9.1p243 (2009-07-16 revision 24175) [i486-linux]
+# === stompserver_ng Note
 #
-# === stompserver Note
-#
-# This code was tested with the stompserver running under Ruby:
-#
-# * 1.9.0
-# * 1.9.1
-#
-# The standard 0.9.9 stompserver gem using ruby
-# 1.9.x fails.
-#
-# --------
-#
-# A version of server code modified for 1.9.0 and 1.9.1  is 
+# A version of server code modified for 1.9.0+ is
 # available by:
 #
-# *	git clone git://github.com/gmallard/stompserver.git
-#
-# Note!: the 'master' branch of that repository also includes modifications to:
-#
-# * active record support for MySql
-# * additions for using standard ruby 'logger' style logging
-# * a variety of other enhancements to the stompserver code base
-#
-# To obtain a _minimal_ set of server changes for 1.9.x, see the 'minimal_19x'
-# branch in that repository.
-#
-# === stomp Gem Note
-#
-# No rdoc documentation was produced during the standard install of the 0.9.9
-# gem.  It is not clear why this happened.  I uninstalled the gem, and 
-# reinstalled with the '--rdoc --ri' options, and all was well.
+# *	git clone git://github.com/gmallard/stompserver_ng.git
 #
 # == Rdoc Generation
 #
 # To generate rdoc for this project, use:
 #
 # * rake doc:rdoc
-#
-# == Stompserver Start Options
-#
-# === stompserver Command Line Options
-#
-# Note: these options are for stompserver and have nothing to do with AMQ.
-#
-# Command line options for the stompserver 0.9.9 level are:
-#
-# -C, --config=CONFIGFILE:: Configuration File (default: stompserver.conf)
-# -p, --port=PORT:: Change the port (default: 61613)
-# -b, --host=ADDR:: Change the host (default: localhost)
-# -q, --queuetype=QUEUETYPE:: Queue type (memory|dbm|activerecord|file) (default: memory)
-# -w, --working_dir=DIR:: Change the working directory (default: current directory)
-# -s, --storage=DIR:: Change the storage directory (default: .stompserver, relative to working_dir)
-# -d, --debug:: Turn on debug messages
-# -a, --auth:: Require client authorization
-# -c, --checkpoint=SECONDS:: Time between checkpointing the queues in seconds (default: 0)
-# -h, --help:: Show help message
-#
-# === stompserver Configuration File Options
-#
-# Note: these options are for stompserver and have nothing to do with AMQ.
-#
-# Configuration options can also be stored in a configuration file.  This is
-# normally a YAML file named <b>stompserver.conf</b> in the server's working 
-# directory. An example of such a configuration file is provided in this 
-# project.
-#
-# == Active MQ Configuration
-#
-# Active MQ requires the following addition to the standard <b>activemq.xml</b>
-# file in order to support the stomp protocol:
-#
-#  <!-- The transport connectors ActiveMQ will listen to -->
-#  <transportConnectors>
-#      .....
-#   <transportConnector name="stomp" uri="stomp://localhost:61613"/>
-#      .....
-#  </transportConnectors>
-#
-# == Testing
-#
-# The client code in this project has been tested against:
-#
-# stompserver:: Versions as described above
-# AMQ:: Versions as described above
-#
-# There are no formal unit tests for this project.  Feel free to clone and
-# add them if you care to. :-)
-#
-# Before running any of the command line tests described below, you must
-# have a server (stompserver or AMQ) up and running.  Furthermore, any AMQ
-# server must be configured to accept the stomp message protocols.
-#
-# === Client To Server Connection Parameters
-#
-# Client to server connection parameters can best be controlled by modifying
-# the <b>props.yaml</b> configuration file found in the project's root directory.
-#
-# Also note that command line parameter overrides are allowed, see below.
-# <b>However</b> the rake tests described here do <b>not</b> currently 
-# support parameter overrides from the command line. <b>Beware!</b>
 #
 # === Basic Producer and Consumer Tests
 #

@@ -1,9 +1,15 @@
 require 'logger'
 #
-require 'rubygems'
+require 'rubygems' if RUBY_VERSION =~ /1\.8/
 require 'eventmachine'
-$:.unshift File.join(File.dirname(__FILE__), "..", "..", "lib")
-require 'runparms'
+
+if Kernel.respond_to?(:require_relative)
+  require_relative '../../lib/runparms'
+else
+  $:.unshift File.join(File.dirname(__FILE__), "../..", "lib")
+  require 'runparms'
+end
+
 #
 # = StompSendSubscribeClient
 #
@@ -139,7 +145,7 @@ def send_a_message(conn, dest, message, headers={})
   return if not conn.connected?
   1.upto(@max_msgs) do |mnum|
       outmsg = "#{message} |:| #{mnum}"
-      conn.publish(dest, outmsg, headers) # EM supplied Stomp method
+      conn.send(dest, outmsg, headers) # EM supplied Stomp method
   end
   @need_sends = false
   @need_subscribe = true

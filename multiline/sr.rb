@@ -1,9 +1,14 @@
 require 'rubygems'
 require 'stomp'
 require 'logger'
-$:.unshift File.join(File.dirname(__FILE__), "..", "lib")
-require 'runparms'
-require 'stomphelper'
+
+if Kernel.respond_to?(:require_relative)
+  require_relative '../lib/runparms'
+else
+  $:.unshift File.join(File.dirname(__FILE__), "..", "lib")
+  require 'runparms'
+end
+
 @log = Logger.new(STDOUT)
 @log.level = Logger::DEBUG
 # ---------------

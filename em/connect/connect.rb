@@ -1,9 +1,15 @@
 require 'logger'
 #
-require 'rubygems'
+require 'rubygems' if RUBY_VERSION =~ /1\.8/
 require 'eventmachine'
-$:.unshift File.join(File.dirname(__FILE__), "..", "..", "lib")
-require 'runparms'
+
+if Kernel.respond_to?(:require_relative)
+  require_relative '../../lib/runparms'
+else
+  $:.unshift File.join(File.dirname(__FILE__), "../..", "lib")
+  require 'runparms'
+end
+
 #
 # This example is almost like the eventmachine documentation.
 #
@@ -61,7 +67,7 @@ EM.run {
     #
     # send_data(data) takes a well-formed stomp frame!
     #
-    conn.publish_data("DISCONNECT\n\n\x00")
+    conn.send_data("DISCONNECT\n\n\x00")
     puts "EM.run disconnect sent"
     #
     EventMachine::stop_event_loop()

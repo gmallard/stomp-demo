@@ -1,5 +1,5 @@
 #
-require 'rubygems'
+require 'rubygems' if RUBY_VERSION =~ /1\.8/
 require 'stomp'
 require 'logger'
 #
@@ -16,7 +16,7 @@ class Connection
     max_min = params[:max_msgs] - params[:min_msgs] + 1
     @num_msgs = params[:min_msgs] + rand(max_min)
     #
-    @me = "T#{tnum}_#{ccnum}_con"
+    @me = "T#{ccnum}_#{tnum}_con"
   end
   #
   def testcocl
@@ -36,13 +36,18 @@ class Connection
     #
     @conn.disconnect()
     #
-    @log.debug("Connection instance #{@tnum}/#{@ccnum} ends")
+    @log.debug("Connection instance #{@me} ends")
   end
   #
   def putmsgs
     1.upto(@num_msgs) do |mnum|
       msg = "#{mnum} of #{@num_msgs}"
-      @conn.publish(@qname, msg)
+      begin
+        @conn.publish(@qname, msg)
+      rescue RuntimeException => ex
+        @log.debug("Exception: #{@me}, qn: #{@qname}, msg:#{msg}")
+        raise
+      end
       @log.debug("#{@me} published #{msg}")
       sleep rand(3)*rand
     end

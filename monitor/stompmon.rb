@@ -1,18 +1,22 @@
 #
 # = Stomp Queue Monitor
 #
-# Subscribe to /queue/monitor, per the stompserver README, and output
+# Subscribe to /queue/monitor, per the stompserver gem README, and output
 # the current statistics for existing queues.
-#
-# I suspect this does not work (or does nothing) whe connected to Active
-# MQ.
 #
 require 'rubygems'
 require 'stomp'
 require 'logger'
-$:.unshift File.join(File.dirname(__FILE__), "..", "lib")
-require 'runparms'
-require 'stomphelper'
+
+if Kernel.respond_to?(:require_relative)
+  require_relative '../lib/runparms'
+  require_relative '../lib/stomphelper'
+else
+  $:.unshift File.join(File.dirname(__FILE__), "..", "lib")
+  require 'runparms'
+  require 'stomphelper'
+end
+
 #
 #
 class StompMonitor

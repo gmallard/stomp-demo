@@ -1,11 +1,6 @@
 require 'rubygems'
 require 'stomp'
-# require 'logger'
-$:.unshift File.join(File.dirname(__FILE__), "..", "lib")
-$:.unshift File.join(File.dirname(__FILE__))
-#
-require 'slogger'
-slogger = Slogger.new
+
 #
 login_hash = {
 	:hosts => [ {:login => "login", :passcode => "passcode", 
@@ -21,7 +16,7 @@ login_hash = {
       :timeout => -1,
       :connect_headers => {},
       :parse_timeout => 5,
-      :logger => slogger,
+      :logger => nil,
 }
 #  :parse_timeout => 30
 #
@@ -41,13 +36,13 @@ p [ message.body ]
 
 #
 puts "Starting sleep"
-sleep 30
+sleep 2
 puts "Receiving Second ......"
 message2 = conn.receive
 puts "Message: #{message2}"
 
 puts "Starting sleep"
-sleep 30
+sleep 2
 puts "Receiving 3rd ......"
 message3 = conn.receive
 puts "Message: #{message3}"
@@ -56,7 +51,7 @@ puts "Unsubscribing ...."
 conn.unsubscribe queue_name
 puts "Unsubscribe complete ...."
 puts "Starting sleep"
-sleep 30
+sleep 2
 
 puts "Disconnecting ..."
 conn.disconnect()

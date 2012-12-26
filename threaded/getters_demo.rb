@@ -8,12 +8,19 @@
 # * (n) getter threads are started, and process messages
 # * getter threads may be started before the putter runs
 #
-require 'rubygems'
+require 'rubygems' if RUBY_VERSION =~ /1\.8/
 require 'stomp'
 require 'logger'
-$:.unshift File.join(File.dirname(__FILE__), "..", "lib")
-require 'runparms'
-require 'stomphelper'
+
+if Kernel.respond_to?(:require_relative)
+  require_relative '../lib/runparms'
+  require_relative '../lib/stomphelper'
+else
+  $:.unshift File.join(File.dirname(__FILE__), "..", "lib")
+  require 'runparms'
+  require 'stomphelper'
+end
+
 #
 class ThreadedGetters
   # Getter thread list.

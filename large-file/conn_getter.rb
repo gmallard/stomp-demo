@@ -1,7 +1,6 @@
-require 'rubygems'
+require 'rubygems' if RUBY_VERSION =~ /1\.8/
 require 'stomp'
-# require 'logger'
-$:.unshift File.join(File.dirname(__FILE__), "..", "lib")
+
 #
 login_hash = {
 	:hosts => [ {:login => "lfgetter", :passcode => "passcode", 

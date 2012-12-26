@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'stomp'
-# require 'logger'
-$:.unshift File.join(File.dirname(__FILE__), "..", "lib")
+
 #
 login_hash = {
 	:hosts => [ {:login => "login", :passcode => "passcode", 

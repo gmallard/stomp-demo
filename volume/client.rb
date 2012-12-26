@@ -1,5 +1,5 @@
 #
-require 'rubygems'
+require 'rubygems' if RUBY_VERSION =~ /1\.8/
 require 'stomp'
 require 'logger'
 #
@@ -16,7 +16,7 @@ class Client
     max_min = params[:max_msgs] - params[:min_msgs] + 1
     @num_msgs = params[:min_msgs] + rand(max_min)
     #
-    @me = "T#{tnum}_#{ccnum}_cli"
+    @me = "T#{ccnum}_#{tnum}_cli"
   end
   #
   def testcocl

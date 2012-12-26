@@ -2,17 +2,20 @@
 #
 # = Poller
 #
-# An alternative style for the 'hanger' demonstration.  This
-# style should function on all releases of the Ruby stomp client
-# gem.
+# Demonstrate polling for messages.
 #
-require 'rubygems'
+require 'rubygems' if RUBY_VERSION =~ /1\.8/
 require 'stomp'
 require 'thread'
 require 'logger'
-$:.unshift File.join(File.dirname(__FILE__), "..", "lib")
-require 'runparms'
-require 'stomphelper'
+
+if Kernel.respond_to?(:require_relative)
+  require_relative '../lib/runparms'
+else
+  $:.unshift File.join(File.dirname(__FILE__), "..", "lib")
+  require 'runparms'
+end
+
 #
 log = Logger.new(STDOUT)
 log.level = Logger::DEBUG
@@ -23,6 +26,7 @@ conn = Stomp::Connection.open(runparms.userid, runparms.password,
 #
 log.debug("Starting thread to poll the socket: #{Thread.current}")
 #
+rc = 0
 Thread.new(conn) do |amq|
     log.debug "Poller: #{Thread.current}"
      while true
@@ -32,9 +36,10 @@ Thread.new(conn) do |amq|
           dest = msg.headers["destination"]
           time = Time.now.strftime('%H:%M:%S')
           log.debug "#{time}:#{dest} > #{msg.body.chomp}"
+          rc += 1
         else
 	        log.debug "sleeping .... #{Thread.current}"
-          sleep 0.05
+          sleep 0.1
         end
     end
 end
@@ -47,4 +52,5 @@ conn.publish("/topic/thread.test", Time.now.to_s)
 #
 log.debug("Sleeping 1 second")
 sleep 1
+log.debug("Receive Count: #{rc}")
 

@@ -2,10 +2,16 @@
 # = Test Instance
 #
 require 'logger'
-$:.unshift File.join(File.dirname(__FILE__))
-#
-require 'connection'
-require 'client'
+
+if Kernel.respond_to?(:require_relative)
+  require_relative 'connection'
+  require_relative 'client'
+else
+  $:.unshift File.join(File.dirname(__FILE__))
+  require 'connection'
+  require 'client'
+end
+
 #
 class Test
   #

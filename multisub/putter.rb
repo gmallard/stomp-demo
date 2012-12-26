@@ -1,4 +1,4 @@
-require 'rubygems'
+require 'rubygems' if RUBY_VERSION =~ /1\.8/
 require 'stomp'
 #
 puts "starting"
@@ -10,7 +10,7 @@ puts "connection complete"
 #
 queue_name = "/queue/mtsubtext"
 msg_to_send = "The answer is 42. And then some"
-max_msgs_per_queue = 2
+max_msgs_per_queue = 5
 num_queues = 2
 #
 1.upto(num_queues) do |q|

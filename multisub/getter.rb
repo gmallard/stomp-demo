@@ -1,4 +1,4 @@
-require 'rubygems'
+require 'rubygems' if RUBY_VERSION =~ /1\.8/
 require 'stomp'
 #
 puts "starting"
@@ -14,7 +14,7 @@ idlist = [ "dummy", "smt01", "smt02"] # size matches num_queues
 idcounts = [ -1, 0, 0]
 tot_count = 0
 num_queues = 2
-max_msgs_per_queue = 2
+max_msgs_per_queue = 5
 #
 1.upto(idlist.size-1) do |q|
 	qn = queue_name + "-" + q.to_s
