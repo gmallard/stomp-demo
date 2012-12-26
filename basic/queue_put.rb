@@ -1,5 +1,5 @@
 require 'rubygems'
-require 'stomp'
+require 'stomp' # Current version
 require 'logger'
 $:.unshift File.join(File.dirname(__FILE__), "..", "lib")
 require 'runparms'
@@ -45,7 +45,7 @@ class BasicMessagePutter
     for i in 1..@max_msgs do
        message = "Go Sox #{i}!"
        @@log.debug "#{message}"
-       @client.send(@queue_name, message, 
+       @client.publish(@queue_name, message, 
         {"persistent" => true, "client-id" => @client_id, 
          "reply-to" => @queue_name} )
     end

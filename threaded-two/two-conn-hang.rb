@@ -44,7 +44,7 @@ def example_one(amqsleep = nil)
   # Do issue a subscribe
   conn.subscribe(@qname, @headers)
   # Send a message
-  conn.send(@qname, Time.now.to_s)
+  conn.publish(@qname, Time.now.to_s)
   if amqsleep
     sleep amqsleep
   end

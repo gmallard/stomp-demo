@@ -39,7 +39,7 @@ end
 # conn.subscribe "/topic/thread.test"
 #
 log.debug("Sending to /topic/thread.test")
-conn.send("/topic/thread.test", Time.now.to_s)
+conn.publish("/topic/thread.test", Time.now.to_s)
 log.debug("Sleeping 1 second")
 #
 # Main thread will complete, and the process will end.  A message

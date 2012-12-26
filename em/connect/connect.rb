@@ -61,7 +61,7 @@ EM.run {
     #
     # send_data(data) takes a well-formed stomp frame!
     #
-    conn.send_data("DISCONNECT\n\n\x00")
+    conn.publish_data("DISCONNECT\n\n\x00")
     puts "EM.run disconnect sent"
     #
     EventMachine::stop_event_loop()

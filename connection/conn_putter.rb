@@ -47,7 +47,7 @@ class ConectionSender
     for msgnum in (0..@max_msgs-1) do
       next_msg = "Message number: #{msgnum+1}"
       @@log.debug("Next to send: #{next_msg}")
-      @conn.send @queue_name, next_msg, @headers
+      @conn.publish @queue_name, next_msg, @headers
       StompHelper::pause("After first send") if (msgnum == 0 and $DEBUG)
     end
   end
@@ -72,6 +72,6 @@ max_msgs = StompHelper.get_maxmsgs()
 csr = ConectionSender.new(:max_msgs => max_msgs, 
   :queue_name => qname )
 #
-csr.send_messages()
+csr.publish_messages()
 csr.shutdown()
 

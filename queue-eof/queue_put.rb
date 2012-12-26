@@ -46,12 +46,12 @@ class QEofMessagePutter
     for i in 1..@max_msgs do
        message = "Da Bears #{i}!"
        @@log.debug "#{self.class} #{message}"
-       @client.send(@queue_name, message, headers)
+       @client.publish(@queue_name, message, headers)
     end
     # EOF message
     if @do_eow
       @@log.debug "#{self.class} putting end work message: #{Runparms::EOF_MSG}"
-      @client.send(@queue_name, Runparms::EOF_MSG, headers)
+      @client.publish(@queue_name, Runparms::EOF_MSG, headers)
     end
     @@log.debug "#{self.class} putter client ending"
     @client.close

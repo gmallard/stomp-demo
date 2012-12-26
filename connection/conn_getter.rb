@@ -47,7 +47,7 @@ class ConectionReceiver
     for msgnum in (0..@max_msgs-1) do
       next_msg = "Message number: #{msgnum+1}"
       @@log.debug("Next to send: #{next_msg}")
-      @conn.send @queue_name, next_msg
+      @conn.publish @queue_name, next_msg
       StompHelper::pause("After first send") if (msgnum == 0 and $DEBUG)
     end
   end

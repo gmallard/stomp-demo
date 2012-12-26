@@ -139,7 +139,7 @@ def send_a_message(conn, dest, message, headers={})
   return if not conn.connected?
   1.upto(@max_msgs) do |mnum|
       outmsg = "#{message} |:| #{mnum}"
-      conn.send(dest, outmsg, headers) # EM supplied Stomp method
+      conn.publish(dest, outmsg, headers) # EM supplied Stomp method
   end
   @need_sends = false
   @need_subscribe = true

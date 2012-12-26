@@ -14,7 +14,7 @@ def runtest(message, host, port)
 
   @log.debug "Length: #{message.size}"
   p [ message ]
-  conn.send "/queue/multilend", message
+  conn.publish "/queue/multilend", message
   #
   conn.disconnect
   @log.debug "Disconnected"
