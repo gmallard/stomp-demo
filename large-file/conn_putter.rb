@@ -9,10 +9,10 @@ login_hash = {
 }
 #
 headers = { "ack" => "auto" , "client-id" => "hash_putter",
-	:suppress_content_length => false }
+	:suppress_content_length => true }
 queue_name = "/queue/lfqueue01"
 #
-num_msgs = 1
+num_msgs = 5
 #
 puts "Connecting ..."
 $stdout.flush
@@ -37,10 +37,6 @@ $stdout.flush
 end
 #
 conn.publish queue_name, "QUIT", headers
-#
-puts "Starting wait ..."
-$stdout.flush
-sleep 3
 #
 puts "Disconnecting ..."
 $stdout.flush

@@ -24,6 +24,7 @@ while true
   nr += 1
   puts "Getting message: #{nr}"
   message = conn.receive
+  puts "Headers are: #{message.headers}"
   puts "Size is: #{message.body.size}"
   break if message.body == "QUIT"
 end
