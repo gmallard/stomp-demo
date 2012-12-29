@@ -59,7 +59,7 @@ class QueueClearer
     # thread!!
     #
     @client.subscribe(@queue_name,
-     {"persistent" => true, "client-id" => @client_id} ) do |message|
+     {"client-id" => @client_id} ) do |message|
       lmsg = "Got Reply: ID=#{message.headers['message-id']} "
       lmsg += "BODY=#{message.body} "
       lmsg += "on QUEUE #{message.headers['destination']}"
@@ -73,6 +73,6 @@ class QueueClearer
 end
 #
 getter = QueueClearer.new(:queue_name => 
-  ARGV[0] )
+  ENV['STOMP_CLEARQ'] )
 getter.get_messages
 
