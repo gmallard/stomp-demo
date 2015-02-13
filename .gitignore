@@ -6,4 +6,5 @@ doc
 html
 temp*
 large-data*
+.DS*
 
